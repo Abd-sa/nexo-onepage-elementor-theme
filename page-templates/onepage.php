@@ -3,8 +3,8 @@
  * Template Name: NEXO OnePage
  * Template Post Type: page
  *
- * Assign this template to any page. Fully compatible with Elementor:
- * open the page → click "Edit with Elementor".
+ * Default: beautiful built-in sections.
+ * After you Publish a design in Elementor: shows Elementor content.
  *
  * @package NEXO
  */
@@ -15,26 +15,27 @@ get_header();
 <main id="primary" class="nexo-main nexo-onepage">
 
 	<?php
-	if ( have_posts() ) :
-		while ( have_posts() ) :
-			the_post();
+	$post_id = get_the_ID() ? get_the_ID() : get_queried_object_id();
 
-			if ( nexo_should_show_default_sections( get_the_ID() ) ) {
-				get_template_part( 'template-parts/hero' );
-				get_template_part( 'template-parts/about' );
-				get_template_part( 'template-parts/services' );
-				get_template_part( 'template-parts/portfolio' );
-				get_template_part( 'template-parts/testimonials' );
-				get_template_part( 'template-parts/pricing' );
-				get_template_part( 'template-parts/faq-contact' );
-			} else {
+	if ( nexo_should_show_default_sections( $post_id ) ) :
+		get_template_part( 'template-parts/hero' );
+		get_template_part( 'template-parts/about' );
+		get_template_part( 'template-parts/services' );
+		get_template_part( 'template-parts/portfolio' );
+		get_template_part( 'template-parts/testimonials' );
+		get_template_part( 'template-parts/pricing' );
+		get_template_part( 'template-parts/faq-contact' );
+	else :
+		if ( have_posts() ) :
+			while ( have_posts() ) :
+				the_post();
 				?>
 				<div class="nexo-elementor-content">
 					<?php the_content(); ?>
 				</div>
 				<?php
-			}
-		endwhile;
+			endwhile;
+		endif;
 	endif;
 	?>
 

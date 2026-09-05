@@ -36,30 +36,8 @@ function nexo_fallback_menu() {
 }
 
 /**
- * Default instructional content so the block editor is not empty
- * and the user knows to open Elementor.
- */
-function nexo_get_home_placeholder_content() {
-	return '<!-- wp:group {"layout":{"type":"constrained"}} -->
-<div class="wp-block-group">
-<!-- wp:heading {"textAlign":"center","level":2} -->
-<h2 class="wp-block-heading has-text-align-center">صفحه اصلی NEXO</h2>
-<!-- /wp:heading -->
-
-<!-- wp:paragraph {"align":"center"} -->
-<p class="has-text-align-center">این صفحه را با <strong>Elementor</strong> ویرایش کنید.</p>
-<!-- /wp:paragraph -->
-
-<!-- wp:paragraph {"align":"center"} -->
-<p class="has-text-align-center">از دکمه <strong>«Edit with Elementor»</strong> در بالای صفحه یا نوار ادمین استفاده کنید.<br>تا قبل از ذخیره طراحی در Elementor، نسخه پیش‌فرض سکشن‌های تم در سایت نمایش داده می‌شود.</p>
-<!-- /wp:paragraph -->
-</div>
-<!-- /wp:group -->';
-}
-
-/**
- * On theme activation: create Home page with placeholder content +
- * NEXO OnePage template + set as static front page.
+ * On theme activation: create Home page (empty content is fine —
+ * frontend always shows designed sections until Elementor has real data).
  */
 function nexo_theme_activation() {
 	if ( get_option( 'nexo_home_page_created' ) ) {
@@ -76,20 +54,13 @@ function nexo_theme_activation() {
 
 	if ( $existing ) {
 		$page_id = $existing->ID;
-		// If page exists but is empty, add placeholder so editor is not blank
-		if ( '' === trim( (string) $existing->post_content ) ) {
-			wp_update_post( array(
-				'ID'           => $page_id,
-				'post_content' => nexo_get_home_placeholder_content(),
-			) );
-		}
 	} else {
 		$page_id = wp_insert_post( array(
 			'post_title'   => 'Home',
 			'post_name'    => 'home',
 			'post_status'  => 'publish',
 			'post_type'    => 'page',
-			'post_content' => nexo_get_home_placeholder_content(),
+			'post_content' => '',
 			'post_author'  => get_current_user_id() ? get_current_user_id() : 1,
 		) );
 	}
@@ -104,35 +75,33 @@ function nexo_theme_activation() {
 add_action( 'after_switch_theme', 'nexo_theme_activation' );
 
 /**
- * One-time upgrade for existing installs: fix empty Home page content
+ * Clean up old placeholder content from previous versions so it never
+ * confuses the frontend. Safe to run once.
  */
-function nexo_maybe_fix_home_content() {
-	if ( get_option( 'nexo_home_content_fixed' ) ) {
+function nexo_cleanup_placeholder_content() {
+	if ( get_option( 'nexo_placeholder_cleaned_v2' ) ) {
 		return;
 	}
 
 	$page_id = (int) get_option( 'page_on_front' );
-	if ( ! $page_id ) {
-		update_option( 'nexo_home_content_fixed', 1 );
-		return;
-	}
+	if ( $page_id ) {
+		$post = get_post( $page_id );
+		if ( $post && false !== strpos( (string) $post->post_content, 'Elementor' ) && false !== strpos( (string) $post->post_content, 'NEXO' ) ) {
+			// Only clear if it looks like our instructional placeholder, not a real design
+			if ( ! get_post_meta( $page_id, '_elementor_data', true ) ) {
+				wp_update_post( array(
+					'ID'           => $page_id,
+					'post_content' => '',
+				) );
+			}
+		}
 
-	$post = get_post( $page_id );
-	if ( $post && '' === trim( (string) $post->post_content ) ) {
-		wp_update_post( array(
-			'ID'           => $page_id,
-			'post_content' => nexo_get_home_placeholder_content(),
-		) );
-	}
-
-	// Ensure template is set
-	if ( $post ) {
 		$tpl = get_post_meta( $page_id, '_wp_page_template', true );
 		if ( empty( $tpl ) || 'default' === $tpl ) {
 			update_post_meta( $page_id, '_wp_page_template', 'page-templates/onepage.php' );
 		}
 	}
 
-	update_option( 'nexo_home_content_fixed', 1 );
+	update_option( 'nexo_placeholder_cleaned_v2', 1 );
 }
-add_action( 'admin_init', 'nexo_maybe_fix_home_content' );
+add_action( 'init', 'nexo_cleanup_placeholder_content' );
