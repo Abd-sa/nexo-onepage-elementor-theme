@@ -1,0 +1,45 @@
+/**
+ * RTL / Persian adjustments for NEXO theme
+ */
+
+body {
+	direction: rtl;
+	text-align: right;
+}
+
+.nexo-header-inner,
+.nexo-hero-grid,
+.nexo-about-grid,
+.nexo-faq-contact-grid,
+.nexo-footer-grid,
+.nexo-footer-bottom,
+.nexo-testimonial-author,
+.nexo-skill-header {
+	direction: rtl;
+}
+
+.nexo-nav ul {
+	flex-direction: row-reverse;
+}
+
+.nexo-hero-actions {
+	flex-direction: row-reverse;
+}
+
+.nexo-price-features {
+	text-align: right;
+}
+
+.nexo-faq-question {
+	text-align: right;
+	flex-direction: row-reverse;
+}
+
+.nexo-portfolio-filters {
+	flex-direction: row-reverse;
+}
+
+/* Keep logo and CTA positions natural in RTL */
+.nexo-logo {
+	margin-left: 0;
+}
