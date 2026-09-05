@@ -1,9 +1,14 @@
 <?php
 /**
- * Front Page Template - One Page Layout
+ * Front Page Template
  *
- * This template loads all one-page sections.
- * When using Elementor, you can replace this with a Canvas template.
+ * Priority:
+ * 1. If a static front page is set and has content / Elementor → show that (fully editable).
+ * 2. Otherwise load the default NEXO one-page sections.
+ *
+ * Recommended for commercial use:
+ * Create a Page → Template: "NEXO OnePage" → Settings → Reading → set as homepage.
+ * Then the page appears in Pages list and can be edited with Elementor.
  *
  * @package NEXO
  */
@@ -14,26 +19,36 @@ get_header();
 <main id="primary" class="nexo-main nexo-onepage">
 
 	<?php
-	// Hero Section
-	get_template_part( 'template-parts/hero' );
+	$show_default_sections = true;
 
-	// About Section
-	get_template_part( 'template-parts/about' );
+	// Static front page assigned?
+	if ( is_front_page() && is_page() ) {
+		while ( have_posts() ) {
+			the_post();
 
-	// Services Section
-	get_template_part( 'template-parts/services' );
+			$built_with_elementor = false;
+			if ( defined( 'ELEMENTOR_VERSION' ) && class_exists( '\Elementor\Plugin' ) ) {
+				$built_with_elementor = \Elementor\Plugin::$instance->db->is_built_with_elementor( get_the_ID() );
+			}
 
-	// Portfolio Section (Dynamic CPT)
-	get_template_part( 'template-parts/portfolio' );
+			$content = trim( get_the_content() );
 
-	// Testimonials Section (Dynamic CPT)
-	get_template_part( 'template-parts/testimonials' );
+			if ( $built_with_elementor || ! empty( $content ) ) {
+				the_content();
+				$show_default_sections = false;
+			}
+		}
+	}
 
-	// Pricing Section
-	get_template_part( 'template-parts/pricing' );
-
-	// FAQ + Contact
-	get_template_part( 'template-parts/faq-contact' );
+	if ( $show_default_sections ) {
+		get_template_part( 'template-parts/hero' );
+		get_template_part( 'template-parts/about' );
+		get_template_part( 'template-parts/services' );
+		get_template_part( 'template-parts/portfolio' );
+		get_template_part( 'template-parts/testimonials' );
+		get_template_part( 'template-parts/pricing' );
+		get_template_part( 'template-parts/faq-contact' );
+	}
 	?>
 
 </main>
