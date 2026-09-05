@@ -1,0 +1,604 @@
+/*
+Theme Name: NEXO OnePage
+Theme URI: https://github.com/Abd-sa/nexo-onepage-elementor-theme
+Author: NEXO Team
+Author URI: https://github.com/Abd-sa
+Description: Professional one-page personal portfolio WordPress theme built for Elementor. Includes custom options panel, Portfolio & Testimonials CPT, full RTL & Persian font support. Perfect for freelancers, designers and developers. Ready for RightChin marketplace.
+Version: 1.0.0
+Requires at least: 6.0
+Tested up to: 6.7
+Requires PHP: 7.4
+License: GNU General Public License v2 or later
+License URI: http://www.gnu.org/licenses/gpl-2.0.html
+Text Domain: nexo
+Tags: one-page, portfolio, personal, elementor, rtl-language-support, custom-colors, custom-menu, featured-images, theme-options, translation-ready
+
+NEXO OnePage is a lightweight theme designed to work best with Hello Elementor parent or as standalone with Elementor Canvas.
+*/
+
+/* Reset & Base */
+*,
+*::before,
+*::after {
+	box-sizing: border-box;
+}
+
+html {
+	scroll-behavior: smooth;
+}
+
+body {
+	margin: 0;
+	font-family: var(--nexo-font-body, "Vazirmatn", "IRANSans", system-ui, -apple-system, sans-serif);
+	font-size: var(--nexo-font-size-body, 16px);
+	line-height: 1.7;
+	color: var(--nexo-color-text, #1a1a2e);
+	background-color: var(--nexo-color-bg, #ffffff);
+}
+
+img {
+	max-width: 100%;
+	height: auto;
+	display: block;
+}
+
+a {
+	color: var(--nexo-color-primary, #22c55e);
+	text-decoration: none;
+	transition: color 0.2s ease;
+}
+
+a:hover {
+	color: var(--nexo-color-secondary, #16a34a);
+}
+
+/* CSS Variables - controlled by theme options */
+:root {
+	--nexo-color-primary: #22c55e;
+	--nexo-color-secondary: #16a34a;
+	--nexo-color-accent: #3b82f6;
+	--nexo-color-text: #1a1a2e;
+	--nexo-color-text-light: #64748b;
+	--nexo-color-bg: #ffffff;
+	--nexo-color-bg-alt: #f8fafc;
+	--nexo-color-dark: #0f172a;
+	--nexo-font-heading: "Vazirmatn", "IRANSans", system-ui, sans-serif;
+	--nexo-font-body: "Vazirmatn", "IRANSans", system-ui, sans-serif;
+	--nexo-font-size-h1: 3rem;
+	--nexo-font-size-h2: 2.25rem;
+	--nexo-font-size-h3: 1.5rem;
+	--nexo-font-size-body: 16px;
+	--nexo-container-width: 1200px;
+	--nexo-section-padding: 80px 0;
+}
+
+/* Utility */
+.nexo-container {
+	width: 100%;
+	max-width: var(--nexo-container-width);
+	margin-left: auto;
+	margin-right: auto;
+	padding-left: 20px;
+	padding-right: 20px;
+}
+
+.nexo-section {
+	padding: var(--nexo-section-padding);
+}
+
+.nexo-section-title {
+	font-family: var(--nexo-font-heading);
+	font-size: var(--nexo-font-size-h2);
+	font-weight: 700;
+	margin-bottom: 1rem;
+	color: var(--nexo-color-text);
+}
+
+.nexo-section-subtitle {
+	color: var(--nexo-color-text-light);
+	margin-bottom: 2.5rem;
+	max-width: 600px;
+}
+
+/* Buttons */
+.nexo-btn {
+	display: inline-flex;
+	align-items: center;
+	gap: 8px;
+	padding: 12px 28px;
+	border-radius: 8px;
+	font-weight: 600;
+	font-size: 15px;
+	border: none;
+	cursor: pointer;
+	transition: all 0.25s ease;
+}
+
+.nexo-btn-primary {
+	background: var(--nexo-color-primary);
+	color: #fff;
+}
+
+.nexo-btn-primary:hover {
+	background: var(--nexo-color-secondary);
+	color: #fff;
+	transform: translateY(-2px);
+}
+
+.nexo-btn-outline {
+	background: transparent;
+	border: 2px solid var(--nexo-color-primary);
+	color: var(--nexo-color-primary);
+}
+
+.nexo-btn-outline:hover {
+	background: var(--nexo-color-primary);
+	color: #fff;
+}
+
+/* Header */
+.nexo-header {
+	position: sticky;
+	top: 0;
+	z-index: 1000;
+	background: rgba(255, 255, 255, 0.95);
+	backdrop-filter: blur(10px);
+	border-bottom: 1px solid #e2e8f0;
+	padding: 12px 0;
+}
+
+.nexo-header-inner {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+}
+
+.nexo-logo {
+	font-size: 1.5rem;
+	font-weight: 800;
+	color: var(--nexo-color-text);
+}
+
+.nexo-logo span {
+	color: var(--nexo-color-primary);
+}
+
+.nexo-nav ul {
+	display: flex;
+	list-style: none;
+	margin: 0;
+	padding: 0;
+	gap: 28px;
+}
+
+.nexo-nav a {
+	color: var(--nexo-color-text);
+	font-weight: 500;
+	font-size: 15px;
+}
+
+.nexo-nav a:hover,
+.nexo-nav .current-menu-item a {
+	color: var(--nexo-color-primary);
+}
+
+/* Hero */
+.nexo-hero {
+	padding: 100px 0 80px;
+	background: linear-gradient(180deg, #f8fafc 0%, #ffffff 100%);
+}
+
+.nexo-hero-grid {
+	display: grid;
+	grid-template-columns: 1fr 1fr;
+	gap: 60px;
+	align-items: center;
+}
+
+.nexo-hero-badge {
+	display: inline-block;
+	background: #ecfdf5;
+	color: var(--nexo-color-primary);
+	padding: 6px 14px;
+	border-radius: 50px;
+	font-size: 13px;
+	font-weight: 600;
+	margin-bottom: 16px;
+}
+
+.nexo-hero h1 {
+	font-size: var(--nexo-font-size-h1);
+	font-weight: 800;
+	line-height: 1.2;
+	margin: 0 0 16px;
+}
+
+.nexo-hero-desc {
+	color: var(--nexo-color-text-light);
+	font-size: 1.1rem;
+	margin-bottom: 28px;
+}
+
+.nexo-hero-actions {
+	display: flex;
+	gap: 12px;
+	flex-wrap: wrap;
+	margin-bottom: 32px;
+}
+
+.nexo-hero-stats {
+	display: flex;
+	gap: 24px;
+}
+
+.nexo-stat-box {
+	background: #fff;
+	border: 1px solid #e2e8f0;
+	border-radius: 12px;
+	padding: 14px 20px;
+	box-shadow: 0 4px 12px rgba(0,0,0,0.04);
+}
+
+.nexo-stat-box strong {
+	display: block;
+	font-size: 1.4rem;
+	color: var(--nexo-color-primary);
+}
+
+.nexo-hero-image {
+	position: relative;
+}
+
+.nexo-hero-image img {
+	border-radius: 20px;
+	width: 100%;
+}
+
+/* About */
+.nexo-about-grid {
+	display: grid;
+	grid-template-columns: 1fr 1fr;
+	gap: 50px;
+	align-items: center;
+}
+
+.nexo-skill {
+	margin-bottom: 18px;
+}
+
+.nexo-skill-header {
+	display: flex;
+	justify-content: space-between;
+	margin-bottom: 6px;
+	font-weight: 600;
+	font-size: 14px;
+}
+
+.nexo-skill-bar {
+	height: 8px;
+	background: #e2e8f0;
+	border-radius: 10px;
+	overflow: hidden;
+}
+
+.nexo-skill-fill {
+	height: 100%;
+	background: var(--nexo-color-primary);
+	border-radius: 10px;
+	transition: width 1s ease;
+}
+
+/* Services */
+.nexo-services-grid {
+	display: grid;
+	grid-template-columns: repeat(4, 1fr);
+	gap: 24px;
+}
+
+.nexo-service-card {
+	background: var(--nexo-color-dark);
+	color: #fff;
+	border-radius: 16px;
+	padding: 32px 24px;
+	transition: transform 0.3s ease;
+}
+
+.nexo-service-card:hover {
+	transform: translateY(-6px);
+}
+
+.nexo-service-icon {
+	width: 48px;
+	height: 48px;
+	background: rgba(34, 197, 94, 0.15);
+	border-radius: 12px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	margin-bottom: 20px;
+	font-size: 22px;
+}
+
+.nexo-service-card h3 {
+	font-size: 1.15rem;
+	margin: 0 0 10px;
+}
+
+.nexo-service-card p {
+	color: #94a3b8;
+	font-size: 14px;
+	margin: 0;
+}
+
+/* Portfolio */
+.nexo-portfolio-filters {
+	display: flex;
+	gap: 10px;
+	margin-bottom: 32px;
+	flex-wrap: wrap;
+}
+
+.nexo-filter-btn {
+	padding: 8px 18px;
+	border-radius: 50px;
+	border: 1px solid #e2e8f0;
+	background: #fff;
+	cursor: pointer;
+	font-size: 14px;
+	font-weight: 500;
+	transition: all 0.2s;
+}
+
+.nexo-filter-btn.active,
+.nexo-filter-btn:hover {
+	background: var(--nexo-color-primary);
+	color: #fff;
+	border-color: var(--nexo-color-primary);
+}
+
+.nexo-portfolio-grid {
+	display: grid;
+	grid-template-columns: repeat(4, 1fr);
+	gap: 24px;
+}
+
+.nexo-portfolio-item {
+	border-radius: 14px;
+	overflow: hidden;
+	background: #fff;
+	border: 1px solid #e2e8f0;
+	transition: box-shadow 0.3s;
+}
+
+.nexo-portfolio-item:hover {
+	box-shadow: 0 12px 30px rgba(0,0,0,0.08);
+}
+
+.nexo-portfolio-item img {
+	width: 100%;
+	height: 200px;
+	object-fit: cover;
+}
+
+.nexo-portfolio-info {
+	padding: 16px;
+}
+
+.nexo-portfolio-info h4 {
+	margin: 0 0 4px;
+	font-size: 1rem;
+}
+
+.nexo-portfolio-cat {
+	font-size: 13px;
+	color: var(--nexo-color-text-light);
+}
+
+/* Testimonials */
+.nexo-testimonials-grid {
+	display: grid;
+	grid-template-columns: repeat(3, 1fr);
+	gap: 24px;
+}
+
+.nexo-testimonial-card {
+	background: #fff;
+	border: 1px solid #e2e8f0;
+	border-radius: 16px;
+	padding: 28px;
+}
+
+.nexo-testimonial-text {
+	font-style: italic;
+	color: var(--nexo-color-text);
+	margin-bottom: 20px;
+}
+
+.nexo-testimonial-author {
+	display: flex;
+	align-items: center;
+	gap: 12px;
+}
+
+.nexo-testimonial-author img {
+	width: 48px;
+	height: 48px;
+	border-radius: 50%;
+	object-fit: cover;
+}
+
+.nexo-testimonial-author strong {
+	display: block;
+	font-size: 15px;
+}
+
+.nexo-testimonial-author span {
+	font-size: 13px;
+	color: var(--nexo-color-text-light);
+}
+
+/* Pricing */
+.nexo-pricing-grid {
+	display: grid;
+	grid-template-columns: repeat(3, 1fr);
+	gap: 24px;
+	align-items: stretch;
+}
+
+.nexo-price-card {
+	background: #fff;
+	border: 1px solid #e2e8f0;
+	border-radius: 16px;
+	padding: 36px 28px;
+	text-align: center;
+	position: relative;
+}
+
+.nexo-price-card.popular {
+	border-color: var(--nexo-color-primary);
+	box-shadow: 0 0 0 2px var(--nexo-color-primary);
+}
+
+.nexo-price-badge {
+	position: absolute;
+	top: -12px;
+	left: 50%;
+	transform: translateX(-50%);
+	background: var(--nexo-color-primary);
+	color: #fff;
+	font-size: 12px;
+	font-weight: 600;
+	padding: 4px 14px;
+	border-radius: 50px;
+}
+
+.nexo-price-amount {
+	font-size: 2.5rem;
+	font-weight: 800;
+	margin: 16px 0;
+}
+
+.nexo-price-features {
+	list-style: none;
+	padding: 0;
+	margin: 24px 0;
+	text-align: right;
+}
+
+.nexo-price-features li {
+	padding: 8px 0;
+	border-bottom: 1px solid #f1f5f9;
+	font-size: 14px;
+}
+
+/* FAQ + Contact */
+.nexo-faq-contact-grid {
+	display: grid;
+	grid-template-columns: 1fr 1fr;
+	gap: 50px;
+}
+
+.nexo-faq-item {
+	border-bottom: 1px solid #e2e8f0;
+}
+
+.nexo-faq-question {
+	width: 100%;
+	text-align: right;
+	background: none;
+	border: none;
+	padding: 18px 0;
+	font-size: 16px;
+	font-weight: 600;
+	cursor: pointer;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+}
+
+.nexo-faq-answer {
+	display: none;
+	padding-bottom: 18px;
+	color: var(--nexo-color-text-light);
+}
+
+.nexo-faq-item.active .nexo-faq-answer {
+	display: block;
+}
+
+.nexo-contact-form input,
+.nexo-contact-form textarea {
+	width: 100%;
+	padding: 14px 16px;
+	border: 1px solid #e2e8f0;
+	border-radius: 10px;
+	margin-bottom: 14px;
+	font-family: inherit;
+	font-size: 15px;
+}
+
+.nexo-contact-form textarea {
+	min-height: 120px;
+	resize: vertical;
+}
+
+/* Footer */
+.nexo-footer {
+	background: var(--nexo-color-dark);
+	color: #94a3b8;
+	padding: 60px 0 30px;
+}
+
+.nexo-footer-grid {
+	display: grid;
+	grid-template-columns: 2fr 1fr 1fr 1.5fr;
+	gap: 40px;
+	margin-bottom: 40px;
+}
+
+.nexo-footer a {
+	color: #94a3b8;
+}
+
+.nexo-footer a:hover {
+	color: #fff;
+}
+
+.nexo-footer-bottom {
+	border-top: 1px solid #1e293b;
+	padding-top: 24px;
+	display: flex;
+	justify-content: space-between;
+	font-size: 14px;
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+	.nexo-services-grid,
+	.nexo-portfolio-grid {
+		grid-template-columns: repeat(2, 1fr);
+	}
+	.nexo-testimonials-grid,
+	.nexo-pricing-grid {
+		grid-template-columns: 1fr;
+	}
+}
+
+@media (max-width: 768px) {
+	.nexo-hero-grid,
+	.nexo-about-grid,
+	.nexo-faq-contact-grid,
+	.nexo-footer-grid {
+		grid-template-columns: 1fr;
+	}
+	.nexo-nav {
+		display: none;
+	}
+	.nexo-hero h1 {
+		font-size: 2.2rem;
+	}
+	.nexo-services-grid,
+	.nexo-portfolio-grid {
+		grid-template-columns: 1fr;
+	}
+}
