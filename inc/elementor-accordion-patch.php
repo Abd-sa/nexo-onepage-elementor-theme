@@ -1,6 +1,6 @@
 <?php
 /**
- * Expandable FAQ (Elementor Accordion) for default homepage design
+ * Expandable FAQ (Elementor Accordion) + Persian FAQ/Contact section
  *
  * @package NEXO
  */
@@ -9,12 +9,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-/**
- * Elementor Accordion widget
- *
- * @param array $items [ ['q'=>..., 'a'=>...], ... ]
- * @return array
- */
 function nexo_el_accordion( $items ) {
 	$tabs = array();
 
@@ -59,29 +53,23 @@ function nexo_el_accordion( $items ) {
 	);
 }
 
-/**
- * Build FAQ + Contact section with expandable accordion
- *
- * @param string $primary Primary color hex
- * @return array Elementor container element
- */
 function nexo_build_faq_contact_section( $primary = '#22C55E' ) {
 	$faq_items = array(
 		array(
-			'q' => 'How long does a project take?',
-			'a' => 'Most projects take between 2 to 6 weeks depending on scope and complexity.',
+			'q' => 'مدت زمان انجام پروژه چقدر است؟',
+			'a' => 'بیشتر پروژه‌ها بسته به حجم و پیچیدگی کار، بین ۲ تا ۶ هفته زمان می‌برند.',
 		),
 		array(
-			'q' => 'Do you provide support after delivery?',
-			'a' => 'Yes, every package includes a support period. Extended support is also available.',
+			'q' => 'آیا بعد از تحویل پشتیبانی دارید؟',
+			'a' => 'بله، هر پکیج شامل دوره پشتیبانی است. امکان تمدید پشتیبانی هم وجود دارد.',
 		),
 		array(
-			'q' => 'Can you work with my existing website?',
-			'a' => 'Absolutely. I can redesign, improve or extend existing websites.',
+			'q' => 'آیا روی سایت فعلی‌ام هم کار می‌کنید؟',
+			'a' => 'حتماً. امکان بازطراحی، بهبود و توسعه سایت‌های موجود وجود دارد.',
 		),
 		array(
-			'q' => 'What do I need to get started?',
-			'a' => 'Just a brief description of your goals, any existing brand assets, and your preferred timeline.',
+			'q' => 'برای شروع چه چیزهایی لازم است؟',
+			'a' => 'فقط توضیح کوتاهی از هدفتان، فایل‌های برند (در صورت وجود) و زمان‌بندی مورد نظرتان کافی است.',
 		),
 	);
 
@@ -92,7 +80,7 @@ function nexo_build_faq_contact_section( $primary = '#22C55E' ) {
 					nexo_el_inner_container(
 						array(
 							nexo_el_heading(
-								'FAQ',
+								'سوالات متداول',
 								array(
 									'header_size'            => 'p',
 									'title_color'            => $primary,
@@ -100,7 +88,7 @@ function nexo_build_faq_contact_section( $primary = '#22C55E' ) {
 									'typography_font_weight' => '600',
 								)
 							),
-							nexo_el_heading( 'Frequently Asked Questions' ),
+							nexo_el_heading( 'پرسش‌های پرتکرار' ),
 							nexo_el_accordion( $faq_items ),
 						),
 						array(
@@ -111,7 +99,7 @@ function nexo_build_faq_contact_section( $primary = '#22C55E' ) {
 					nexo_el_inner_container(
 						array(
 							nexo_el_heading(
-								'CONTACT',
+								'تماس',
 								array(
 									'header_size'            => 'p',
 									'title_color'            => $primary,
@@ -119,9 +107,9 @@ function nexo_build_faq_contact_section( $primary = '#22C55E' ) {
 									'typography_font_weight' => '600',
 								)
 							),
-							nexo_el_heading( "Let's Work Together" ),
-							nexo_el_text( '<p style="color:#64748B;">Replace this with an Elementor Form or Contact Form 7 widget.</p><p>hello@example.com<br>+98 912 345 6789<br>Tehran, Iran<br>Mon – Fri: 9AM – 6PM</p>' ),
-							nexo_el_button( 'Send Message', '#', array() ),
+							nexo_el_heading( 'بیایید همکاری کنیم' ),
+							nexo_el_text( '<p style="color:#64748B;">این بخش را می‌توانید با فرم Elementor یا افزونه Contact Form 7 جایگزین کنید.</p><p>hello@example.com<br>۰۹۱۲ ۳۴۵ ۶۷۸۹<br>تهران، ایران<br>شنبه تا چهارشنبه: ۹ صبح تا ۶ عصر</p>' ),
+							nexo_el_button( 'ارسال پیام', '#', array() ),
 						),
 						array(
 							'content_width' => 'full',
@@ -143,22 +131,14 @@ function nexo_build_faq_contact_section( $primary = '#22C55E' ) {
 	);
 }
 
-/**
- * Swap last section of default Elementor data with expandable FAQ version
- *
- * @param array $data
- * @return array
- */
 function nexo_inject_expandable_faq( $data ) {
 	if ( ! is_array( $data ) || empty( $data ) ) {
 		return $data;
 	}
 
 	$primary = nexo_get_option( 'color_primary', '#22C55E' );
-
-	// Replace the last top-level section (FAQ+Contact)
 	array_pop( $data );
-	$data[] = nexo_build_faq_contact_section( $primary );
+	$data[]  = nexo_build_faq_contact_section( $primary );
 
 	return $data;
 }

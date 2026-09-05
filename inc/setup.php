@@ -10,18 +10,18 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
- * Fallback menu when no menu is assigned
+ * Fallback menu (Persian labels — theme is built for FA audience)
  */
 function nexo_fallback_menu() {
 	$items = array(
-		'home'         => array( 'label' => __( 'Home', 'nexo' ),         'url' => home_url( '/' ) ),
-		'about'        => array( 'label' => __( 'About', 'nexo' ),        'url' => '#about' ),
-		'services'     => array( 'label' => __( 'Services', 'nexo' ),     'url' => '#services' ),
-		'portfolio'    => array( 'label' => __( 'Portfolio', 'nexo' ),    'url' => '#portfolio' ),
-		'testimonials' => array( 'label' => __( 'Testimonials', 'nexo' ), 'url' => '#testimonials' ),
-		'pricing'      => array( 'label' => __( 'Pricing', 'nexo' ),      'url' => '#pricing' ),
-		'faq'          => array( 'label' => __( 'FAQ', 'nexo' ),          'url' => '#faq' ),
-		'contact'      => array( 'label' => __( 'Contact', 'nexo' ),      'url' => '#contact' ),
+		'home'         => array( 'label' => 'خانه',           'url' => home_url( '/' ) ),
+		'about'        => array( 'label' => 'درباره من',      'url' => '#about' ),
+		'services'     => array( 'label' => 'خدمات',          'url' => '#services' ),
+		'portfolio'    => array( 'label' => 'نمونه کارها',    'url' => '#portfolio' ),
+		'testimonials' => array( 'label' => 'نظرات مشتریان',  'url' => '#testimonials' ),
+		'pricing'      => array( 'label' => 'تعرفه‌ها',       'url' => '#pricing' ),
+		'faq'          => array( 'label' => 'سوالات متداول',  'url' => '#faq' ),
+		'contact'      => array( 'label' => 'تماس',           'url' => '#contact' ),
 	);
 
 	echo '<ul id="primary-menu">';
@@ -36,27 +36,41 @@ function nexo_fallback_menu() {
 }
 
 /**
- * On theme activation: create Home page (empty content is fine —
- * frontend always shows designed sections until Elementor has real data).
+ * On theme activation:
+ * - Create «خانه» page
+ * - Set as front page
+ * - Prefer فارسی (fa_IR) so the site is RTL by default
  */
 function nexo_theme_activation() {
+	// Prefer Persian locale → WordPress adds body.rtl automatically
+	if ( ! get_option( 'WPLANG' ) || 'en_US' === get_option( 'WPLANG' ) ) {
+		update_option( 'WPLANG', 'fa_IR' );
+	}
+
 	if ( get_option( 'nexo_home_page_created' ) ) {
 		return;
 	}
 
 	$existing = get_page_by_path( 'home' );
 	if ( ! $existing ) {
-		$existing = get_page_by_title( 'Home' );
+		$existing = get_page_by_title( 'خانه' );
 	}
 	if ( ! $existing ) {
-		$existing = get_page_by_title( 'خانه' );
+		$existing = get_page_by_title( 'Home' );
 	}
 
 	if ( $existing ) {
 		$page_id = $existing->ID;
+		// Prefer Persian title
+		if ( 'خانه' !== $existing->post_title ) {
+			wp_update_post( array(
+				'ID'         => $page_id,
+				'post_title' => 'خانه',
+			) );
+		}
 	} else {
 		$page_id = wp_insert_post( array(
-			'post_title'   => 'Home',
+			'post_title'   => 'خانه',
 			'post_name'    => 'home',
 			'post_status'  => 'publish',
 			'post_type'    => 'page',
@@ -75,19 +89,22 @@ function nexo_theme_activation() {
 add_action( 'after_switch_theme', 'nexo_theme_activation' );
 
 /**
- * Clean up old placeholder content from previous versions so it never
- * confuses the frontend. Safe to run once.
+ * One-time: ensure fa_IR + clean old placeholder
  */
 function nexo_cleanup_placeholder_content() {
-	if ( get_option( 'nexo_placeholder_cleaned_v2' ) ) {
+	if ( get_option( 'nexo_placeholder_cleaned_v3' ) ) {
 		return;
+	}
+
+	// Soft-prefer Persian if still English default
+	if ( ! get_option( 'WPLANG' ) ) {
+		update_option( 'WPLANG', 'fa_IR' );
 	}
 
 	$page_id = (int) get_option( 'page_on_front' );
 	if ( $page_id ) {
 		$post = get_post( $page_id );
 		if ( $post && false !== strpos( (string) $post->post_content, 'Elementor' ) && false !== strpos( (string) $post->post_content, 'NEXO' ) ) {
-			// Only clear if it looks like our instructional placeholder, not a real design
 			if ( ! get_post_meta( $page_id, '_elementor_data', true ) ) {
 				wp_update_post( array(
 					'ID'           => $page_id,
@@ -102,6 +119,6 @@ function nexo_cleanup_placeholder_content() {
 		}
 	}
 
-	update_option( 'nexo_placeholder_cleaned_v2', 1 );
+	update_option( 'nexo_placeholder_cleaned_v3', 1 );
 }
 add_action( 'init', 'nexo_cleanup_placeholder_content' );

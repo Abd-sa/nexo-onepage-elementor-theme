@@ -1,45 +1,52 @@
 /**
- * RTL / Persian adjustments for NEXO theme
+ * NEXO RTL overrides
+ * Loaded automatically when is_rtl() is true (e.g. site language = فارسی)
  */
 
-body {
+body.rtl {
 	direction: rtl;
 	text-align: right;
 }
 
-.nexo-header-inner,
-.nexo-hero-grid,
-.nexo-about-grid,
-.nexo-faq-contact-grid,
-.nexo-footer-grid,
-.nexo-footer-bottom,
-.nexo-testimonial-author,
-.nexo-skill-header {
+.rtl .nexo-hero-grid,
+.rtl .nexo-about-grid,
+.rtl .nexo-faq-contact-grid {
 	direction: rtl;
 }
 
-.nexo-nav ul {
-	flex-direction: row-reverse;
-}
-
-.nexo-hero-actions {
-	flex-direction: row-reverse;
-}
-
-.nexo-price-features {
+.rtl .nexo-hero-actions,
+.rtl .nexo-btn {
 	text-align: right;
 }
 
-.nexo-faq-question {
+.rtl .nexo-nav ul,
+.rtl #primary-menu {
+	flex-direction: row-reverse;
+}
+
+.rtl .nexo-section-title,
+.rtl .nexo-section-label {
 	text-align: right;
-	flex-direction: row-reverse;
 }
 
-.nexo-portfolio-filters {
-	flex-direction: row-reverse;
+.rtl .nexo-section-title.center,
+.rtl .text-center {
+	text-align: center;
 }
 
-/* Keep logo and CTA positions natural in RTL */
-.nexo-logo {
-	margin-left: 0;
+/* Elementor alignment helpers when page is RTL */
+.rtl .elementor-widget-heading .elementor-heading-title {
+	text-align: right;
+}
+
+.rtl .elementor-widget-text-editor {
+	text-align: right;
+}
+
+.rtl .elementor-accordion .elementor-tab-title {
+	text-align: right;
+}
+
+.rtl .elementor-icon-box-wrapper {
+	text-align: right;
 }
