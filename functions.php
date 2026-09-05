@@ -3,14 +3,14 @@
  * NEXO OnePage Theme functions and definitions
  *
  * @package NEXO
- * @version 1.1.0
+ * @version 1.1.1
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-define( 'NEXO_VERSION', '1.1.0' );
+define( 'NEXO_VERSION', '1.1.1' );
 define( 'NEXO_DIR', get_template_directory() );
 define( 'NEXO_URI', get_template_directory_uri() );
 define( 'NEXO_INC', NEXO_DIR . '/inc' );
@@ -22,6 +22,7 @@ require_once NEXO_INC . '/options.php';
 require_once NEXO_INC . '/helpers.php';
 require_once NEXO_INC . '/elementor.php';
 require_once NEXO_INC . '/elementor-default-data.php';
+require_once NEXO_INC . '/elementor-accordion-patch.php';
 
 function nexo_theme_setup() {
 	load_theme_textdomain( 'nexo', NEXO_DIR . '/languages' );
@@ -57,35 +58,79 @@ function nexo_content_width() {
 add_action( 'after_setup_theme', 'nexo_content_width', 0 );
 
 /**
- * After Elementor is loaded: inject default designed homepage once
+ * Apply default Elementor design with expandable FAQ accordion
  */
+function nexo_apply_default_elementor_design_with_faq( $page_id ) {
+	if ( ! $page_id || ! defined( 'ELEMENTOR_VERSION' ) ) {
+		return false;
+	}
+
+	// Always rebuild when using reimport; skip only if design exists and not forcing
+	if ( nexo_has_elementor_design( $page_id ) && ! get_option( 'nexo_force_reimport_design' ) ) {
+		return false;
+	}
+
+	$data = nexo_get_default_elementor_data();
+	$data = nexo_inject_expandable_faq( $data );
+	$json = wp_json_encode( $data );
+
+	if ( ! $json ) {
+		return false;
+	}
+
+	update_post_meta( $page_id, '_elementor_edit_mode', 'builder' );
+	update_post_meta( $page_id, '_elementor_template_type', 'wp-page' );
+	update_post_meta( $page_id, '_elementor_version', ELEMENTOR_VERSION );
+	update_post_meta( $page_id, '_elementor_data', wp_slash( $json ) );
+	update_post_meta( $page_id, '_elementor_page_settings', array() );
+	delete_post_meta( $page_id, '_elementor_css' );
+	delete_option( 'nexo_force_reimport_design' );
+
+	if ( class_exists( '\Elementor\Plugin' ) ) {
+		\Elementor\Plugin::$instance->files_manager->clear_cache();
+	}
+
+	return true;
+}
+
+// Prefer the FAQ-aware apply function
+if ( ! function_exists( 'nexo_apply_default_elementor_design' ) ) {
+	function nexo_apply_default_elementor_design( $page_id ) {
+		return nexo_apply_default_elementor_design_with_faq( $page_id );
+	}
+} else {
+	// Override: wrap original by replacing after load via our named function used below
+}
+
 function nexo_maybe_inject_elementor_home() {
 	if ( ! defined( 'ELEMENTOR_VERSION' ) ) {
 		return;
 	}
-	if ( get_option( 'nexo_elementor_home_injected_v1' ) ) {
+	if ( get_option( 'nexo_elementor_home_injected_v2' ) ) {
 		return;
 	}
 
 	$page_id = (int) get_option( 'page_on_front' );
 	if ( ! $page_id ) {
-		// Ensure home page exists
-		nexo_theme_activation();
+		if ( function_exists( 'nexo_theme_activation' ) ) {
+			nexo_theme_activation();
+		}
 		$page_id = (int) get_option( 'page_on_front' );
 	}
 
 	if ( $page_id ) {
-		nexo_apply_default_elementor_design( $page_id );
+		// Clear old design so accordion version is applied once
+		delete_post_meta( $page_id, '_elementor_data' );
+		delete_post_meta( $page_id, '_elementor_css' );
+		update_option( 'nexo_force_reimport_design', 1 );
+		nexo_apply_default_elementor_design_with_faq( $page_id );
 	}
 
-	update_option( 'nexo_elementor_home_injected_v1', 1 );
+	update_option( 'nexo_elementor_home_injected_v2', 1 );
 }
 add_action( 'elementor/init', 'nexo_maybe_inject_elementor_home', 20 );
 add_action( 'admin_init', 'nexo_maybe_inject_elementor_home', 30 );
 
-/**
- * Admin button to re-import default Elementor design (for testing)
- */
 function nexo_handle_reimport_design() {
 	if ( ! isset( $_GET['nexo_reimport_design'] ) || ! current_user_can( 'manage_options' ) ) {
 		return;
@@ -94,12 +139,12 @@ function nexo_handle_reimport_design() {
 
 	$page_id = (int) get_option( 'page_on_front' );
 	if ( $page_id && defined( 'ELEMENTOR_VERSION' ) ) {
-		// Force re-import: clear existing elementor data first
 		delete_post_meta( $page_id, '_elementor_data' );
 		delete_post_meta( $page_id, '_elementor_css' );
-		delete_option( 'nexo_elementor_home_injected_v1' );
-		nexo_apply_default_elementor_design( $page_id );
-		update_option( 'nexo_elementor_home_injected_v1', 1 );
+		delete_option( 'nexo_elementor_home_injected_v2' );
+		update_option( 'nexo_force_reimport_design', 1 );
+		nexo_apply_default_elementor_design_with_faq( $page_id );
+		update_option( 'nexo_elementor_home_injected_v2', 1 );
 	}
 
 	wp_safe_redirect( admin_url( 'post.php?post=' . $page_id . '&action=elementor' ) );
