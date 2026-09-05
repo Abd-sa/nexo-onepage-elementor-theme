@@ -36,18 +36,38 @@ function nexo_fallback_menu() {
 }
 
 /**
- * On theme activation: create a real "Home" page, assign NEXO OnePage template,
- * and set it as the static front page so it appears in Pages list and is editable.
+ * Default instructional content so the block editor is not empty
+ * and the user knows to open Elementor.
+ */
+function nexo_get_home_placeholder_content() {
+	return '<!-- wp:group {"layout":{"type":"constrained"}} -->
+<div class="wp-block-group">
+<!-- wp:heading {"textAlign":"center","level":2} -->
+<h2 class="wp-block-heading has-text-align-center">صفحه اصلی NEXO</h2>
+<!-- /wp:heading -->
+
+<!-- wp:paragraph {"align":"center"} -->
+<p class="has-text-align-center">این صفحه را با <strong>Elementor</strong> ویرایش کنید.</p>
+<!-- /wp:paragraph -->
+
+<!-- wp:paragraph {"align":"center"} -->
+<p class="has-text-align-center">از دکمه <strong>«Edit with Elementor»</strong> در بالای صفحه یا نوار ادمین استفاده کنید.<br>تا قبل از ذخیره طراحی در Elementor، نسخه پیش‌فرض سکشن‌های تم در سایت نمایش داده می‌شود.</p>
+<!-- /wp:paragraph -->
+</div>
+<!-- /wp:group -->';
+}
+
+/**
+ * On theme activation: create Home page with placeholder content +
+ * NEXO OnePage template + set as static front page.
  */
 function nexo_theme_activation() {
-	// Already done?
 	if ( get_option( 'nexo_home_page_created' ) ) {
 		return;
 	}
 
 	$existing = get_page_by_path( 'home' );
 	if ( ! $existing ) {
-		// Try Persian slug too
 		$existing = get_page_by_title( 'Home' );
 	}
 	if ( ! $existing ) {
@@ -56,64 +76,63 @@ function nexo_theme_activation() {
 
 	if ( $existing ) {
 		$page_id = $existing->ID;
+		// If page exists but is empty, add placeholder so editor is not blank
+		if ( '' === trim( (string) $existing->post_content ) ) {
+			wp_update_post( array(
+				'ID'           => $page_id,
+				'post_content' => nexo_get_home_placeholder_content(),
+			) );
+		}
 	} else {
 		$page_id = wp_insert_post( array(
 			'post_title'   => 'Home',
 			'post_name'    => 'home',
 			'post_status'  => 'publish',
 			'post_type'    => 'page',
-			'post_content' => '',
+			'post_content' => nexo_get_home_placeholder_content(),
 			'post_author'  => get_current_user_id() ? get_current_user_id() : 1,
 		) );
 	}
 
 	if ( $page_id && ! is_wp_error( $page_id ) ) {
-		// Assign page template
 		update_post_meta( $page_id, '_wp_page_template', 'page-templates/onepage.php' );
-
-		// Set as static front page
 		update_option( 'show_on_front', 'page' );
 		update_option( 'page_on_front', $page_id );
-
 		update_option( 'nexo_home_page_created', 1 );
 	}
 }
 add_action( 'after_switch_theme', 'nexo_theme_activation' );
 
 /**
- * Admin notice: explain how to edit the homepage
+ * One-time upgrade for existing installs: fix empty Home page content
  */
-function nexo_admin_notice_homepage() {
-	if ( ! current_user_can( 'edit_theme_options' ) ) {
+function nexo_maybe_fix_home_content() {
+	if ( get_option( 'nexo_home_content_fixed' ) ) {
 		return;
 	}
 
 	$page_id = (int) get_option( 'page_on_front' );
 	if ( ! $page_id ) {
+		update_option( 'nexo_home_content_fixed', 1 );
 		return;
 	}
 
-	$screen = get_current_screen();
-	if ( ! $screen || ! in_array( $screen->id, array( 'themes', 'page', 'dashboard', 'toplevel_page_nexo-settings' ), true ) ) {
-		return;
+	$post = get_post( $page_id );
+	if ( $post && '' === trim( (string) $post->post_content ) ) {
+		wp_update_post( array(
+			'ID'           => $page_id,
+			'post_content' => nexo_get_home_placeholder_content(),
+		) );
 	}
 
-	$edit_link = get_edit_post_link( $page_id );
-	$elementor_link = $edit_link ? admin_url( 'post.php?post=' . $page_id . '&action=elementor' ) : '';
-	?>
-	<div class="notice notice-success is-dismissible">
-		<p>
-			<strong><?php esc_html_e( 'NEXO:', 'nexo' ); ?></strong>
-			<?php esc_html_e( 'Homepage is a real page in Pages list and is fully editable.', 'nexo' ); ?>
-			<?php if ( $edit_link ) : ?>
-				<a href="<?php echo esc_url( $edit_link ); ?>"><?php esc_html_e( 'Edit page', 'nexo' ); ?></a>
-				<?php if ( defined( 'ELEMENTOR_VERSION' ) && $elementor_link ) : ?>
-					|
-					<a href="<?php echo esc_url( $elementor_link ); ?>"><strong><?php esc_html_e( 'Edit with Elementor', 'nexo' ); ?></strong></a>
-				<?php endif; ?>
-			<?php endif; ?>
-		</p>
-	</div>
-	<?php
+	// Ensure template is set
+	if ( $post ) {
+		$tpl = get_post_meta( $page_id, '_wp_page_template', true );
+		if ( empty( $tpl ) || 'default' === $tpl ) {
+			update_post_meta( $page_id, '_wp_page_template', 'page-templates/onepage.php' );
+		}
+	}
+
+	update_option( 'nexo_home_content_fixed', 1 );
 }
-add_action( 'admin_notices', 'nexo_admin_notice_homepage' );
+add_action( 'admin_init', 'nexo_maybe_fix_home_content' );

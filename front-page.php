@@ -1,14 +1,11 @@
 <?php
 /**
- * Front Page Template
+ * Front Page
  *
- * Priority:
- * 1. If a static front page is set and has content / Elementor → show that (fully editable).
- * 2. Otherwise load the default NEXO one-page sections.
+ * - If Elementor is editing / previewing / has saved design → output the_content()
+ * - Otherwise show default NEXO one-page sections
  *
- * Recommended for commercial use:
- * Create a Page → Template: "NEXO OnePage" → Settings → Reading → set as homepage.
- * Then the page appears in Pages list and can be edited with Elementor.
+ * The Home page is a real Page (appears under Pages) and is fully editable with Elementor.
  *
  * @package NEXO
  */
@@ -19,28 +16,30 @@ get_header();
 <main id="primary" class="nexo-main nexo-onepage">
 
 	<?php
-	$show_default_sections = true;
-
-	// Static front page assigned?
-	if ( is_front_page() && is_page() ) {
-		while ( have_posts() ) {
+	if ( have_posts() ) :
+		while ( have_posts() ) :
 			the_post();
 
-			$built_with_elementor = false;
-			if ( defined( 'ELEMENTOR_VERSION' ) && class_exists( '\Elementor\Plugin' ) ) {
-				$built_with_elementor = \Elementor\Plugin::$instance->db->is_built_with_elementor( get_the_ID() );
+			if ( nexo_should_show_default_sections( get_the_ID() ) ) {
+				// Default built-in sections (no Elementor design yet)
+				get_template_part( 'template-parts/hero' );
+				get_template_part( 'template-parts/about' );
+				get_template_part( 'template-parts/services' );
+				get_template_part( 'template-parts/portfolio' );
+				get_template_part( 'template-parts/testimonials' );
+				get_template_part( 'template-parts/pricing' );
+				get_template_part( 'template-parts/faq-contact' );
+			} else {
+				// Elementor canvas / user content — MUST call the_content()
+				?>
+				<div class="nexo-elementor-content">
+					<?php the_content(); ?>
+				</div>
+				<?php
 			}
-
-			$content = trim( get_the_content() );
-
-			if ( $built_with_elementor || ! empty( $content ) ) {
-				the_content();
-				$show_default_sections = false;
-			}
-		}
-	}
-
-	if ( $show_default_sections ) {
+		endwhile;
+	else :
+		// Fallback if no front page post in query
 		get_template_part( 'template-parts/hero' );
 		get_template_part( 'template-parts/about' );
 		get_template_part( 'template-parts/services' );
@@ -48,7 +47,7 @@ get_header();
 		get_template_part( 'template-parts/testimonials' );
 		get_template_part( 'template-parts/pricing' );
 		get_template_part( 'template-parts/faq-contact' );
-	}
+	endif;
 	?>
 
 </main>
