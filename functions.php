@@ -3,14 +3,14 @@
  * NEXO OnePage Theme functions and definitions
  *
  * @package NEXO
- * @version 1.7.0
+ * @version 1.7.1
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-define( 'NEXO_VERSION', '1.7.0' );
+define( 'NEXO_VERSION', '1.7.1' );
 define( 'NEXO_DIR', get_template_directory() );
 define( 'NEXO_URI', get_template_directory_uri() );
 define( 'NEXO_INC', NEXO_DIR . '/inc' );
@@ -26,7 +26,7 @@ require_once NEXO_INC . '/elementor-accordion-patch.php';
 require_once NEXO_INC . '/elementor-fa-defaults.php';
 require_once NEXO_INC . '/elementor-widgets.php';
 require_once NEXO_INC . '/demo-import.php';
-require_once NEXO_INC . '/contact-form.php';
+// contact-form.php removed - handler is in helpers.php
 
 function nexo_theme_setup() {
 	load_theme_textdomain( 'nexo', NEXO_DIR . '/languages' );
@@ -54,8 +54,8 @@ function nexo_theme_setup() {
 
 	register_nav_menus(
 		array(
-			'primary' => 'منوی اصلی',
-			'footer'  => 'منوی فوتر',
+			'primary' => 'Primary Menu',
+			'footer'  => 'Footer Menu',
 		)
 	);
 
@@ -142,7 +142,7 @@ function nexo_handle_reimport_design() {
 	check_admin_referer( 'nexo_reimport_design' );
 
 	if ( empty( $_GET['confirm'] ) || '1' !== (string) $_GET['confirm'] ) {
-		wp_die( 'برای بازنشانی طراحی باید تأیید کنید.', 'تأیید لازم است', array( 'response' => 403, 'back_link' => true ) );
+		wp_die( 'Confirm required.', 'Error', array( 'response' => 403, 'back_link' => true ) );
 	}
 
 	$page_id = (int) get_option( 'page_on_front' );
@@ -162,9 +162,6 @@ function nexo_handle_reimport_design() {
 }
 add_action( 'admin_init', 'nexo_handle_reimport_design' );
 
-/**
- * Apply style preset (designer / developer / photographer)
- */
 function nexo_handle_style_preset() {
 	if ( ! isset( $_GET['nexo_preset'] ) || ! current_user_can( 'manage_options' ) ) {
 		return;
@@ -177,28 +174,28 @@ function nexo_handle_style_preset() {
 			'color_primary'   => '#22c55e',
 			'color_secondary' => '#16a34a',
 			'color_accent'    => '#a855f7',
-			'hero_badge'      => 'سلام، من',
-			'hero_title'      => 'سارا طراحی',
-			'hero_subtitle'   => 'طراح UI/UX و برند',
-			'hero_desc'       => 'تجربه‌های بصری زیبا و کاربردی برای محصولات دیجیتال می‌سازم.',
+			'hero_badge'      => 'Hello',
+			'hero_title'      => 'Sara Design',
+			'hero_subtitle'   => 'UI/UX Designer',
+			'hero_desc'       => 'I design digital products.',
 		),
 		'developer'    => array(
 			'color_primary'   => '#3b82f6',
 			'color_secondary' => '#2563eb',
 			'color_accent'    => '#06b6d4',
-			'hero_badge'      => 'سلام، من',
-			'hero_title'      => 'علی کد',
-			'hero_subtitle'   => 'توسعه‌دهنده وب و فرانت‌اند',
-			'hero_desc'       => 'سایت‌ها و اپلیکیشن‌های سریع، تمیز و مقیاس‌پذیر می‌سازم.',
+			'hero_badge'      => 'Hello',
+			'hero_title'      => 'Ali Code',
+			'hero_subtitle'   => 'Web Developer',
+			'hero_desc'       => 'I build fast websites.',
 		),
 		'photographer' => array(
 			'color_primary'   => '#f59e0b',
 			'color_secondary' => '#d97706',
 			'color_accent'    => '#ef4444',
-			'hero_badge'      => 'سلام، من',
-			'hero_title'      => 'نیما تصویر',
-			'hero_subtitle'   => 'عکاس و داستان‌گو',
-			'hero_desc'       => 'لحظه‌ها را با نور و ترکیب‌بندی ماندگار ثبت می‌کنم.',
+			'hero_badge'      => 'Hello',
+			'hero_title'      => 'Nima Photo',
+			'hero_subtitle'   => 'Photographer',
+			'hero_desc'       => 'I capture moments.',
 		),
 	);
 
