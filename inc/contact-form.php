@@ -36,11 +36,13 @@ function nexo_handle_contact_ajax() {
 
 	$to      = get_option( 'admin_email' );
 	$subject = sprintf( '[NEXO] New message from %s', $name );
-	body    = 'Name: ' . $name . "\n" . 'Email: ' . $email . "\n\n" . 'Message:' . "\n" . $message . "\n";
+	$nl      = chr( 10 );
+	body    = 'Name: ' . $name . $nl . 'Email: ' . $email . $nl . $nl . 'Message:' . $nl . $message . $nl;
 
-	$headers   = array();
-	$headers[] = 'Content-Type: text/plain; charset=UTF-8';
-	$headers[] = 'Reply-To: ' . $name . ' <' . $email . '>';
+	$headers = array(
+		'Content-Type: text/plain; charset=UTF-8',
+		'Reply-To: ' . $name . ' <' . $email . '>',
+	);
 
 	$sent = wp_mail( $to, $subject, $body, $headers );
 
