@@ -1,38 +1,116 @@
 /**
- * NEXO Dark Mode
- * Activated via body.nexo-dark
+ * NEXO Dark Mode - full site
+ * body.nexo-dark | html.nexo-dark
  */
 
+html.nexo-dark,
 body.nexo-dark {
 	--nexo-color-text: #e2e8f0;
 	--nexo-color-text-light: #94a3b8;
 	--nexo-color-bg: #0b1220;
 	--nexo-color-bg-alt: #111827;
 	--nexo-color-dark: #020617;
+	--nexo-color-card: #111827;
+	--nexo-color-border: #1e293b;
 	color: var(--nexo-color-text);
 	background-color: var(--nexo-color-bg);
 }
 
+body.nexo-dark {
+	background-color: #0b1220 !important;
+	color: #e2e8f0 !important;
+}
+
+/* Header */
 body.nexo-dark .nexo-header {
-	background: rgba(11, 18, 32, 0.92);
-	border-bottom-color: #1e293b;
+	background: rgba(11, 18, 32, 0.95) !important;
+	border-bottom-color: #1e293b !important;
 }
 
 body.nexo-dark .nexo-logo,
-body.nexo-dark .nexo-nav a {
+body.nexo-dark .nexo-logo a,
+body.nexo-dark .nexo-nav a,
+body.nexo-dark .nexo-mobile-panel a {
+	color: #e2e8f0 !important;
+}
+
+body.nexo-dark .nexo-mobile-panel {
+	background: #0b1220 !important;
+}
+
+body.nexo-dark .nexo-menu-toggle,
+body.nexo-dark .nexo-theme-toggle {
+	border-color: #334155;
+	color: #e2e8f0;
+}
+
+body.nexo-dark .nexo-menu-toggle span {
+	background: #e2e8f0;
+}
+
+/* Sections / layout */
+body.nexo-dark .nexo-section,
+body.nexo-dark .nexo-hero,
+body.nexo-dark main,
+body.nexo-dark #primary,
+body.nexo-dark .site-content {
+	background-color: transparent;
 	color: #e2e8f0;
 }
 
 body.nexo-dark .nexo-hero {
-	background: linear-gradient(180deg, #111827 0%, #0b1220 100%);
+	background: linear-gradient(180deg, #111827 0%, #0b1220 100%) !important;
 }
 
-body.nexo-dark .nexo-stat-box,
+body.nexo-dark .nexo-section-title,
+body.nexo-dark h1,
+body.nexo-dark h2,
+body.nexo-dark h3,
+body.nexo-dark h4,
+body.nexo-dark h5,
+body.nexo-dark h6 {
+	color: #f1f5f9 !important;
+}
+
+body.nexo-dark .nexo-section-subtitle,
+body.nexo-dark .nexo-hero-desc,
+body.nexo-dark p {
+	color: #94a3b8;
+}
+
+body.nexo-dark .nexo-hero-badge {
+	background: rgba(34, 197, 94, 0.15);
+	color: #4ade80;
+}
+
+body.nexo-dark .nexo-stat-box {
+	background: #111827 !important;
+	border-color: #1e293b !important;
+	color: #e2e8f0;
+}
+
+/* Skills */
+body.nexo-dark .nexo-skill-bar {
+	background: #1e293b;
+}
+
+/* Cards */
 body.nexo-dark .nexo-portfolio-item,
 body.nexo-dark .nexo-testimonial-card,
 body.nexo-dark .nexo-price-card {
-	background: #111827;
-	border-color: #1e293b;
+	background: #111827 !important;
+	border-color: #1e293b !important;
+	color: #e2e8f0;
+}
+
+body.nexo-dark .nexo-portfolio-info h4,
+body.nexo-dark .nexo-testimonial-author strong {
+	color: #f1f5f9;
+}
+
+body.nexo-dark .nexo-portfolio-cat,
+body.nexo-dark .nexo-testimonial-text {
+	color: #94a3b8;
 }
 
 body.nexo-dark .nexo-filter-btn {
@@ -41,21 +119,130 @@ body.nexo-dark .nexo-filter-btn {
 	color: #e2e8f0;
 }
 
-body.nexo-dark .nexo-contact-form input,
-body.nexo-dark .nexo-contact-form textarea {
-	background: #111827;
-	border-color: #334155;
-	color: #e2e8f0;
+body.nexo-dark .nexo-filter-btn.active,
+body.nexo-dark .nexo-filter-btn:hover {
+	background: var(--nexo-color-primary, #22c55e);
+	border-color: var(--nexo-color-primary, #22c55e);
+	color: #fff;
 }
 
+body.nexo-dark .nexo-price-features li {
+	border-bottom-color: #1e293b;
+	color: #cbd5e1;
+}
+
+/* FAQ + Contact */
 body.nexo-dark .nexo-faq-item {
 	border-bottom-color: #1e293b;
 }
 
 body.nexo-dark .nexo-faq-question {
+	color: #e2e8f0 !important;
+}
+
+body.nexo-dark .nexo-faq-answer {
+	color: #94a3b8;
+}
+
+body.nexo-dark .nexo-contact-form input,
+body.nexo-dark .nexo-contact-form textarea,
+body.nexo-dark input[type="text"],
+body.nexo-dark input[type="email"],
+body.nexo-dark input[type="url"],
+body.nexo-dark textarea {
+	background: #111827 !important;
+	border-color: #334155 !important;
+	color: #e2e8f0 !important;
+}
+
+body.nexo-dark .nexo-contact-form input::placeholder,
+body.nexo-dark .nexo-contact-form textarea::placeholder {
+	color: #64748b;
+}
+
+/* Footer */
+body.nexo-dark .nexo-footer {
+	background: #020617 !important;
+	color: #94a3b8;
+}
+
+body.nexo-dark .nexo-footer a {
+	color: #94a3b8;
+}
+
+body.nexo-dark .nexo-footer a:hover {
+	color: #fff;
+}
+
+body.nexo-dark .nexo-footer-bottom {
+	border-top-color: #1e293b;
+}
+
+/* Elementor containers / sections (homepage built with Elementor) */
+body.nexo-dark .elementor-section,
+body.nexo-dark .e-con,
+body.nexo-dark .e-con-inner,
+body.nexo-dark .elementor-widget-wrap,
+body.nexo-dark .elementor-element {
+	--e-global-color-text: #e2e8f0;
+}
+
+body.nexo-dark .elementor-section:not(.nexo-keep-bg),
+body.nexo-dark .e-con:not(.nexo-keep-bg) {
+	background-color: transparent;
+}
+
+/* Force light text inside Elementor when parent is dark */
+body.nexo-dark .elementor-heading-title,
+body.nexo-dark .elementor-widget-heading .elementor-heading-title {
+	color: #f1f5f9 !important;
+}
+
+body.nexo-dark .elementor-widget-text-editor,
+body.nexo-dark .elementor-widget-text-editor p,
+body.nexo-dark .elementor-icon-box-description,
+body.nexo-dark .elementor-icon-box-title {
+	color: #cbd5e1 !important;
+}
+
+body.nexo-dark .elementor-icon-box-wrapper,
+body.nexo-dark .elementor-image-box-wrapper {
 	color: #e2e8f0;
 }
 
-body.nexo-dark .nexo-mobile-panel {
+/* Common white cards inside Elementor */
+body.nexo-dark .elementor-widget-container {
+	color: inherit;
+}
+
+/* Accordion */
+body.nexo-dark .elementor-accordion-item,
+body.nexo-dark .elementor-tab-title,
+body.nexo-dark .elementor-tab-content {
+	background: #111827 !important;
+	color: #e2e8f0 !important;
+	border-color: #1e293b !important;
+}
+
+body.nexo-dark .elementor-accordion-title,
+body.nexo-dark .elementor-tab-title a {
+	color: #f1f5f9 !important;
+}
+
+/* Buttons stay branded */
+body.nexo-dark .nexo-btn-outline {
+	border-color: var(--nexo-color-primary, #22c55e);
+	color: var(--nexo-color-primary, #22c55e);
+}
+
+body.nexo-dark .nexo-btn-outline:hover {
+	background: var(--nexo-color-primary, #22c55e);
+	color: #fff;
+}
+
+/* Single / archive portfolio */
+body.nexo-dark .nexo-single-portfolio,
+body.nexo-dark .nexo-archive-portfolio {
 	background: #0b1220;
+	color: #e2e8f0;
 }

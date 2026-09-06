@@ -1,10 +1,9 @@
 /**
- * NEXO front-end scripts (Phase 4)
+ * NEXO front-end scripts
  */
 (function () {
   'use strict';
 
-  // FAQ accordion
   document.querySelectorAll('.nexo-faq-question').forEach(function (btn) {
     btn.addEventListener('click', function () {
       var item = btn.closest('.nexo-faq-item');
@@ -17,7 +16,6 @@
     });
   });
 
-  // Portfolio filters
   document.querySelectorAll('.nexo-filter-btn').forEach(function (btn) {
     btn.addEventListener('click', function () {
       var filter = btn.getAttribute('data-filter') || '*';
@@ -44,7 +42,6 @@
     });
   });
 
-  // Contact form AJAX
   document.querySelectorAll('.nexo-contact-form').forEach(function (form) {
     form.addEventListener('submit', function (e) {
       e.preventDefault();
@@ -65,7 +62,7 @@
       if (btn) {
         btn.disabled = true;
         btn.dataset.oldText = btn.textContent;
-        btn.textContent = (nexoData.i18n && nexoData.i18n.sending) || '…';
+        btn.textContent = (nexoData.i18n && nexoData.i18n.sending) || '...';
       }
 
       fetch(nexoData.ajaxUrl, { method: 'POST', body: fd, credentials: 'same-origin' })
@@ -88,7 +85,6 @@
     });
   });
 
-  // Smooth scroll
   document.querySelectorAll('a[href^="#"]').forEach(function (a) {
     a.addEventListener('click', function (e) {
       var id = a.getAttribute('href');
@@ -97,7 +93,6 @@
       if (target) {
         e.preventDefault();
         target.scrollIntoView({ behavior: 'smooth', block: 'start' });
-        // close mobile menu
         var panel = document.getElementById('nexo-mobile-panel');
         var toggle = document.getElementById('nexo-menu-toggle');
         if (panel) {
@@ -110,7 +105,6 @@
     });
   });
 
-  // Mobile menu
   var menuToggle = document.getElementById('nexo-menu-toggle');
   var mobilePanel = document.getElementById('nexo-mobile-panel');
   if (menuToggle && mobilePanel) {
@@ -129,20 +123,21 @@
     });
   }
 
-  // Dark mode toggle (persisted)
+  // Full-site dark mode: html + body
   var themeToggle = document.getElementById('nexo-theme-toggle');
   function applyDark(on) {
+    document.documentElement.classList.toggle('nexo-dark', !!on);
     document.body.classList.toggle('nexo-dark', !!on);
-    if (themeToggle) themeToggle.textContent = on ? '☀️' : '🌙';
+    if (themeToggle) themeToggle.textContent = on ? '\u2600\uFE0F' : '\uD83C\uDF19';
     try {
       localStorage.setItem('nexo_dark', on ? '1' : '0');
-    } catch (e) {}
+    } catch (err) {}
   }
   if (themeToggle) {
     var saved = null;
     try {
       saved = localStorage.getItem('nexo_dark');
-    } catch (e) {}
+    } catch (err) {}
     if (saved === '1') applyDark(true);
     else if (saved === '0') applyDark(false);
     else if (document.body.classList.contains('nexo-dark')) applyDark(true);
@@ -152,7 +147,6 @@
     });
   }
 
-  // Sticky header shadow
   var header = document.getElementById('masthead');
   if (header) {
     window.addEventListener(
@@ -165,7 +159,6 @@
     );
   }
 
-  // Scroll reveal
   if (document.body.classList.contains('nexo-anim')) {
     var targets = document.querySelectorAll(
       '.nexo-section, .nexo-service-card, .nexo-portfolio-item, .nexo-testimonial-card, .nexo-price-card'
