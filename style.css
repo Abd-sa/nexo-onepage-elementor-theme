@@ -3,8 +3,8 @@ Theme Name: NEXO OnePage
 Theme URI: https://github.com/Abd-sa/nexo-onepage-elementor-theme
 Author: NEXO Team
 Author URI: https://github.com/Abd-sa
-Description: Professional one-page personal portfolio WordPress theme built for Elementor. Includes custom options panel, Portfolio & Testimonials CPT, full RTL & Persian font support. Perfect for freelancers, designers and developers. Ready for RightChin marketplace.
-Version: 1.0.0
+Description: Professional one-page personal portfolio WordPress theme built for Elementor. Includes custom options panel, Portfolio & Testimonials CPT, full RTL & Persian font support. Perfect for freelancers, designers and developers.
+Version: 1.3.0
 Requires at least: 6.0
 Tested up to: 6.7
 Requires PHP: 7.4
@@ -12,11 +12,8 @@ License: GNU General Public License v2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 Text Domain: nexo
 Tags: one-page, portfolio, personal, elementor, rtl-language-support, custom-colors, custom-menu, featured-images, theme-options, translation-ready
-
-NEXO OnePage is a lightweight theme designed to work best with Hello Elementor parent or as standalone with Elementor Canvas.
 */
 
-/* Reset & Base */
 *,
 *::before,
 *::after {
@@ -52,7 +49,6 @@ a:hover {
 	color: var(--nexo-color-secondary, #16a34a);
 }
 
-/* CSS Variables - controlled by theme options */
 :root {
 	--nexo-color-primary: #22c55e;
 	--nexo-color-secondary: #16a34a;
@@ -72,7 +68,6 @@ a:hover {
 	--nexo-section-padding: 80px 0;
 }
 
-/* Utility */
 .nexo-container {
 	width: 100%;
 	max-width: var(--nexo-container-width);
@@ -100,7 +95,6 @@ a:hover {
 	max-width: 600px;
 }
 
-/* Buttons */
 .nexo-btn {
 	display: inline-flex;
 	align-items: center;
@@ -136,7 +130,6 @@ a:hover {
 	color: #fff;
 }
 
-/* Header */
 .nexo-header {
 	position: sticky;
 	top: 0;
@@ -182,7 +175,6 @@ a:hover {
 	color: var(--nexo-color-primary);
 }
 
-/* Hero */
 .nexo-hero {
 	padding: 100px 0 80px;
 	background: linear-gradient(180deg, #f8fafc 0%, #ffffff 100%);
@@ -245,16 +237,11 @@ a:hover {
 	color: var(--nexo-color-primary);
 }
 
-.nexo-hero-image {
-	position: relative;
-}
-
 .nexo-hero-image img {
 	border-radius: 20px;
 	width: 100%;
 }
 
-/* About */
 .nexo-about-grid {
 	display: grid;
 	grid-template-columns: 1fr 1fr;
@@ -285,10 +272,8 @@ a:hover {
 	height: 100%;
 	background: var(--nexo-color-primary);
 	border-radius: 10px;
-	transition: width 1s ease;
 }
 
-/* Services */
 .nexo-services-grid {
 	display: grid;
 	grid-template-columns: repeat(4, 1fr);
@@ -330,7 +315,6 @@ a:hover {
 	margin: 0;
 }
 
-/* Portfolio */
 .nexo-portfolio-filters {
 	display: flex;
 	gap: 10px;
@@ -346,7 +330,6 @@ a:hover {
 	cursor: pointer;
 	font-size: 14px;
 	font-weight: 500;
-	transition: all 0.2s;
 }
 
 .nexo-filter-btn.active,
@@ -367,11 +350,6 @@ a:hover {
 	overflow: hidden;
 	background: #fff;
 	border: 1px solid #e2e8f0;
-	transition: box-shadow 0.3s;
-}
-
-.nexo-portfolio-item:hover {
-	box-shadow: 0 12px 30px rgba(0,0,0,0.08);
 }
 
 .nexo-portfolio-item img {
@@ -394,7 +372,6 @@ a:hover {
 	color: var(--nexo-color-text-light);
 }
 
-/* Testimonials */
 .nexo-testimonials-grid {
 	display: grid;
 	grid-template-columns: repeat(3, 1fr);
@@ -410,7 +387,6 @@ a:hover {
 
 .nexo-testimonial-text {
 	font-style: italic;
-	color: var(--nexo-color-text);
 	margin-bottom: 20px;
 }
 
@@ -427,22 +403,10 @@ a:hover {
 	object-fit: cover;
 }
 
-.nexo-testimonial-author strong {
-	display: block;
-	font-size: 15px;
-}
-
-.nexo-testimonial-author span {
-	font-size: 13px;
-	color: var(--nexo-color-text-light);
-}
-
-/* Pricing */
 .nexo-pricing-grid {
 	display: grid;
 	grid-template-columns: repeat(3, 1fr);
 	gap: 24px;
-	align-items: stretch;
 }
 
 .nexo-price-card {
@@ -491,7 +455,6 @@ a:hover {
 	font-size: 14px;
 }
 
-/* FAQ + Contact */
 .nexo-faq-contact-grid {
 	display: grid;
 	grid-template-columns: 1fr 1fr;
@@ -542,7 +505,6 @@ a:hover {
 	resize: vertical;
 }
 
-/* Footer */
 .nexo-footer {
 	background: var(--nexo-color-dark);
 	color: #94a3b8;
@@ -572,7 +534,6 @@ a:hover {
 	font-size: 14px;
 }
 
-/* Responsive */
 @media (max-width: 1024px) {
 	.nexo-services-grid,
 	.nexo-portfolio-grid {
