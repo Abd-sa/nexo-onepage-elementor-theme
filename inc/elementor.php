@@ -36,6 +36,9 @@ function nexo_elementor_add_page_support( $post_types ) {
 }
 add_filter( 'elementor/utils/get_public_post_types', 'nexo_elementor_add_page_support' );
 
+/**
+ * Admin notices — helpful, not aggressive
+ */
 function nexo_admin_notice_elementor() {
 	if ( ! current_user_can( 'edit_pages' ) ) {
 		return;
@@ -45,6 +48,17 @@ function nexo_admin_notice_elementor() {
 		include_once ABSPATH . 'wp-admin/includes/plugin.php';
 	}
 
+	$screen = function_exists( 'get_current_screen' ) ? get_current_screen() : null;
+	if ( ! $screen ) {
+		return;
+	}
+
+	$allowed = array( 'dashboard', 'edit-page', 'page', 'themes', 'toplevel_page_nexo-settings', 'plugins' );
+	if ( ! in_array( $screen->id, $allowed, true ) ) {
+		return;
+	}
+
+	// Elementor missing
 	if ( ! is_plugin_active( 'elementor/elementor.php' ) ) {
 		if ( ! current_user_can( 'install_plugins' ) ) {
 			return;
@@ -57,8 +71,8 @@ function nexo_admin_notice_elementor() {
 		<div class="notice notice-warning is-dismissible">
 			<p>
 				<strong>NEXO:</strong>
-				<?php esc_html_e( 'برای صفحه اصلی طراحی‌شده با سکشن‌های Elementor، ابتدا Elementor را نصب و فعال کنید.', 'nexo' ); ?>
-				<a href="<?php echo esc_url( $install_url ); ?>" class="button button-primary" style="margin-right:8px;">
+				<?php esc_html_e( 'برای ویرایش صفحه اصلی با سکشن‌های آماده، افزونه Elementor را نصب و فعال کنید.', 'nexo' ); ?>
+				<a href="<?php echo esc_url( $install_url ); ?>" class="button button-primary" style="margin-inline-start:8px;">
 					<?php esc_html_e( 'نصب Elementor', 'nexo' ); ?>
 				</a>
 			</p>
@@ -72,31 +86,22 @@ function nexo_admin_notice_elementor() {
 		return;
 	}
 
-	$screen = function_exists( 'get_current_screen' ) ? get_current_screen() : null;
-	if ( ! $screen ) {
-		return;
-	}
-
-	$allowed = array( 'dashboard', 'edit-page', 'page', 'themes', 'toplevel_page_nexo-settings', 'plugins' );
-	if ( ! in_array( $screen->id, $allowed, true ) ) {
-		return;
-	}
-
 	$elementor_url = admin_url( 'post.php?post=' . $page_id . '&action=elementor' );
 	$reimport_url  = wp_nonce_url(
-		admin_url( 'admin.php?nexo_reimport_design=1' ),
+		admin_url( 'admin.php?nexo_reimport_design=1&confirm=1' ),
 		'nexo_reimport_design'
 	);
 	?>
-	<div class="notice notice-success is-dismissible">
+	<div class="notice notice-info is-dismissible">
 		<p>
 			<strong>NEXO:</strong>
-			<?php esc_html_e( 'صفحه اصلی با سکشن‌ها و کانتینرهای Elementor طراحی شده و قابل ویرایش است.', 'nexo' ); ?>
-			<a class="button button-primary" style="margin-right:8px;" href="<?php echo esc_url( $elementor_url ); ?>">
+			<?php esc_html_e( 'صفحه اصلی را می‌توانید با Elementor ویرایش کنید.', 'nexo' ); ?>
+			<a class="button button-primary" style="margin-inline-start:8px;" href="<?php echo esc_url( $elementor_url ); ?>">
 				<?php esc_html_e( 'ویرایش با Elementor', 'nexo' ); ?>
 			</a>
-			<a class="button" href="<?php echo esc_url( $reimport_url ); ?>">
-				<?php esc_html_e( 'بازنشانی طراحی پیش‌فرض Elementor', 'nexo' ); ?>
+			<a class="button" style="margin-inline-start:4px;" href="<?php echo esc_url( $reimport_url ); ?>"
+				onclick="return confirm('<?php echo esc_js( __( 'طراحی فعلی صفحه اصلی پاک و با نسخه پیش‌فرض جایگزین می‌شود. ادامه می‌دهید؟', 'nexo' ) ); ?>');">
+				<?php esc_html_e( 'بازنشانی طراحی پیش‌فرض', 'nexo' ); ?>
 			</a>
 		</p>
 	</div>
