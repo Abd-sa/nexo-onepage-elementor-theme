@@ -9,9 +9,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-/**
- * Handle AJAX contact submission.
- */
 function nexo_handle_contact_ajax() {
 	check_ajax_referer( 'nexo_nonce', 'nonce' );
 
@@ -31,26 +28,32 @@ function nexo_handle_contact_ajax() {
 	}
 
 	if ( empty( $name ) || empty( $email ) || ! is_email( $email ) || empty( $message ) ) {
-		wp_send_json_error( array( 'message' => 'Please fill all fields correctly.' ) );
+		$err = array();
+		$err['message'] = 'Please fill all fields correctly.';
+		wp_send_json_error( $err );
 	}
 
-	$to      = get_option( 'admin_email' );
+	$to = get_option( 'admin_email' );
 	$subject = sprintf( '[NEXO] New message from %s', $name );
-	$nl      = chr( 10 );
-	body    = 'Name: ' . $name . $nl . 'Email: ' . $email . $nl . $nl . 'Message:' . $nl . $message . $nl;
+	$nl = chr( 10 );
+	body = 'Name: ' . $name . $nl . 'Email: ' . $email . $nl . $nl . 'Message:' . $nl . $message . $nl;
 
-	$headers = array(
-		'Content-Type: text/plain; charset=UTF-8',
-		'Reply-To: ' . $name . ' <' . $email . '>',
-	);
+	$headers = array();
+	$headers[] = 'Content-Type: text/plain; charset=UTF-8';
+	$headers[] = 'Reply-To: ' . $name . ' <' . $email . '>';
 
 	$sent = wp_mail( $to, $subject, $body, $headers );
 
 	if ( $sent ) {
-		wp_send_json_success( array( 'message' => 'Your message was sent successfully.' ) );
+		$ok = array();
+		$ok['message'] = 'Your message was sent successfully.';
+		wp_send_json_success( $ok );
 	}
 
-	wp_send_json_error( array( 'message' => 'Could not send email. Please try again later.' ) );
+	$fail = array();
+	$fail['message'] = 'Could not send email. Please try again later.';
+	wp_send_json_error( $fail );
 }
+
 add_action( 'wp_ajax_nexo_contact', 'nexo_handle_contact_ajax' );
 add_action( 'wp_ajax_nopriv_nexo_contact', 'nexo_handle_contact_ajax' );
