@@ -100,8 +100,11 @@ function nexo_seed_elementor_design_if_empty( $page_id ) {
 	update_post_meta( $page_id, '_elementor_page_settings', array() );
 	delete_post_meta( $page_id, '_elementor_css' );
 
-	if ( class_exists( '\Elementor\Plugin' ) && isset( '\Elementor\Plugin'::$instance->files_manager ) ) {
-		\Elementor\Plugin::$instance->files_manager->clear_cache();
+	if ( class_exists( '\Elementor\Plugin' ) ) {
+		$plugin = \Elementor\Plugin::$instance;
+		if ( isset( $plugin->files_manager ) ) {
+			$plugin->files_manager->clear_cache();
+		}
 	}
 
 	return true;
