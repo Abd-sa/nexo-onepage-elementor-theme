@@ -3,9 +3,6 @@
  * Template Name: NEXO OnePage
  * Template Post Type: page
  *
- * Default: beautiful built-in sections.
- * After you Publish a design in Elementor: shows Elementor content.
- *
  * @package NEXO
  */
 
@@ -36,6 +33,7 @@ get_header();
 				<?php
 			endwhile;
 		endif;
+		get_template_part( 'template-parts/contact' );
 	endif;
 	?>
 

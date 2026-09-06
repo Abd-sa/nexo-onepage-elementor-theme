@@ -123,11 +123,12 @@
     });
   }
 
-  // Full-site dark mode: html + body
   var themeToggle = document.getElementById('nexo-theme-toggle');
   function applyDark(on) {
     document.documentElement.classList.toggle('nexo-dark', !!on);
     document.body.classList.toggle('nexo-dark', !!on);
+    document.documentElement.style.backgroundColor = on ? '#0b1220' : '';
+    document.body.style.backgroundColor = on ? '#0b1220' : '';
     if (themeToggle) themeToggle.textContent = on ? '\u2600\uFE0F' : '\uD83C\uDF19';
     try {
       localStorage.setItem('nexo_dark', on ? '1' : '0');
@@ -140,10 +141,12 @@
     } catch (err) {}
     if (saved === '1') applyDark(true);
     else if (saved === '0') applyDark(false);
-    else if (document.body.classList.contains('nexo-dark')) applyDark(true);
+    else if (document.documentElement.classList.contains('nexo-dark') || document.body.classList.contains('nexo-dark')) {
+      applyDark(true);
+    }
 
     themeToggle.addEventListener('click', function () {
-      applyDark(!document.body.classList.contains('nexo-dark'));
+      applyDark(!document.documentElement.classList.contains('nexo-dark'));
     });
   }
 

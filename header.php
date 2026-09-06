@@ -1,6 +1,6 @@
 <?php
 /**
- * Header template (Phase 4: mobile menu + dark toggle)
+ * Header template
  *
  * @package NEXO
  */
@@ -10,6 +10,16 @@
 	<meta charset="<?php bloginfo( 'charset' ); ?>">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="profile" href="https://gmpg.org/xfn/11">
+	<script>
+	(function () {
+		try {
+			var d = localStorage.getItem('nexo_dark');
+			if (d === '1' || (!d && document.documentElement.classList.contains('nexo-dark'))) {
+				document.documentElement.classList.add('nexo-dark');
+			}
+		} catch (e) {}
+	})();
+	</script>
 	<?php wp_head(); ?>
 </head>
 
