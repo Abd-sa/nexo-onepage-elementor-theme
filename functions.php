@@ -3,14 +3,14 @@
  * NEXO OnePage Theme functions and definitions
  *
  * @package NEXO
- * @version 1.7.1
+ * @version 1.7.2
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-define( 'NEXO_VERSION', '1.7.1' );
+define( 'NEXO_VERSION', '1.7.2' );
 define( 'NEXO_DIR', get_template_directory() );
 define( 'NEXO_URI', get_template_directory_uri() );
 define( 'NEXO_INC', NEXO_DIR . '/inc' );
@@ -26,7 +26,7 @@ require_once NEXO_INC . '/elementor-accordion-patch.php';
 require_once NEXO_INC . '/elementor-fa-defaults.php';
 require_once NEXO_INC . '/elementor-widgets.php';
 require_once NEXO_INC . '/demo-import.php';
-// contact-form.php removed - handler is in helpers.php
+require_once NEXO_INC . '/ajax.php';
 
 function nexo_theme_setup() {
 	load_theme_textdomain( 'nexo', NEXO_DIR . '/languages' );
@@ -100,7 +100,7 @@ function nexo_seed_elementor_design_if_empty( $page_id ) {
 	update_post_meta( $page_id, '_elementor_page_settings', array() );
 	delete_post_meta( $page_id, '_elementor_css' );
 
-	if ( class_exists( '\Elementor\Plugin' ) && isset( \Elementor\Plugin::$instance->files_manager ) ) {
+	if ( class_exists( '\Elementor\Plugin' ) && isset( '\Elementor\Plugin'::$instance->files_manager ) ) {
 		\Elementor\Plugin::$instance->files_manager->clear_cache();
 	}
 
