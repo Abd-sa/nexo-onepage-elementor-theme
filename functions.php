@@ -3,14 +3,14 @@
  * NEXO OnePage Theme functions and definitions
  *
  * @package NEXO
- * @version 1.3.0
+ * @version 1.4.0
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-define( 'NEXO_VERSION', '1.3.0' );
+define( 'NEXO_VERSION', '1.4.0' );
 define( 'NEXO_DIR', get_template_directory() );
 define( 'NEXO_URI', get_template_directory_uri() );
 define( 'NEXO_INC', NEXO_DIR . '/inc' );
@@ -24,10 +24,8 @@ require_once NEXO_INC . '/elementor.php';
 require_once NEXO_INC . '/elementor-default-data.php';
 require_once NEXO_INC . '/elementor-accordion-patch.php';
 require_once NEXO_INC . '/elementor-fa-defaults.php';
+require_once NEXO_INC . '/demo-import.php';
 
-/**
- * Theme supports & menus
- */
 function nexo_theme_setup() {
 	load_theme_textdomain( 'nexo', NEXO_DIR . '/languages' );
 
@@ -54,8 +52,8 @@ function nexo_theme_setup() {
 
 	register_nav_menus(
 		array(
-			'primary' => __( 'Primary Menu', 'nexo' ),
-			'footer'  => __( 'Footer Menu', 'nexo' ),
+			'primary' => __( 'منوی اصلی', 'nexo' ),
+			'footer'  => __( 'منوی فوتر', 'nexo' ),
 		)
 	);
 
@@ -69,16 +67,6 @@ function nexo_content_width() {
 }
 add_action( 'after_setup_theme', 'nexo_content_width', 0 );
 
-/**
- * Seed default Elementor design ONLY when:
- * - Elementor is active
- * - Front page exists
- * - Page has NO real Elementor data yet
- * - Never deletes or overwrites an existing design
- *
- * @param int $page_id Page ID.
- * @return bool
- */
 function nexo_seed_elementor_design_if_empty( $page_id ) {
 	if ( ! $page_id || ! defined( 'ELEMENTOR_VERSION' ) ) {
 		return false;
@@ -88,7 +76,6 @@ function nexo_seed_elementor_design_if_empty( $page_id ) {
 		return false;
 	}
 
-	// Never touch a page that already has a design
 	if ( nexo_has_elementor_design( $page_id ) ) {
 		return false;
 	}
@@ -118,10 +105,6 @@ function nexo_seed_elementor_design_if_empty( $page_id ) {
 	return true;
 }
 
-/**
- * On first run after theme + Elementor are ready: seed empty home only once.
- * Does NOT delete existing designs.
- */
 function nexo_maybe_seed_home_elementor() {
 	if ( ! defined( 'ELEMENTOR_VERSION' ) ) {
 		return;
@@ -145,10 +128,6 @@ function nexo_maybe_seed_home_elementor() {
 }
 add_action( 'elementor/init', 'nexo_maybe_seed_home_elementor', 20 );
 
-/**
- * Manual re-import (admin only, nonce-protected).
- * Requires explicit confirmation query arg.
- */
 function nexo_handle_reimport_design() {
 	if ( ! isset( $_GET['nexo_reimport_design'] ) ) {
 		return;
@@ -160,10 +139,9 @@ function nexo_handle_reimport_design() {
 
 	check_admin_referer( 'nexo_reimport_design' );
 
-	// Require explicit confirm=1 to avoid accidental clicks
 	if ( empty( $_GET['confirm'] ) || '1' !== (string) $_GET['confirm'] ) {
 		wp_die(
-			esc_html__( 'برای بازنشانی طراحی باید تأیید کنید. از دکمه داخل پنل تنظیمات استفاده کنید.', 'nexo' ),
+			esc_html__( 'برای بازنشانی طراحی باید تأیید کنید.', 'nexo' ),
 			esc_html__( 'تأیید لازم است', 'nexo' ),
 			array( 'response' => 403, 'back_link' => true )
 		);
@@ -171,11 +149,10 @@ function nexo_handle_reimport_design() {
 
 	$page_id = (int) get_option( 'page_on_front' );
 	if ( ! $page_id || ! defined( 'ELEMENTOR_VERSION' ) ) {
-		wp_safe_redirect( admin_url( 'themes.php' ) );
+		wp_safe_redirect( admin_url( 'admin.php?page=nexo-settings' ) );
 		exit;
 	}
 
-	// Explicit overwrite only after confirm
 	delete_post_meta( $page_id, '_elementor_data' );
 	delete_post_meta( $page_id, '_elementor_css' );
 	delete_post_meta( $page_id, '_elementor_edit_mode' );
