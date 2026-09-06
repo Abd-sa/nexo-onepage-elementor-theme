@@ -1,6 +1,6 @@
 <?php
 /**
- * Enqueue scripts and styles (Phase 2 performance tweaks)
+ * Enqueue scripts and styles
  *
  * @package NEXO
  */
@@ -10,7 +10,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 function nexo_enqueue_assets() {
-	// Preconnect for fonts
 	add_action(
 		'wp_head',
 		static function () {
@@ -31,6 +30,20 @@ function nexo_enqueue_assets() {
 		'nexo-style',
 		get_stylesheet_uri(),
 		array( 'nexo-fonts' ),
+		NEXO_VERSION
+	);
+
+	wp_enqueue_style(
+		'nexo-extras',
+		NEXO_URI . '/assets/css/theme-extras.css',
+		array( 'nexo-style' ),
+		NEXO_VERSION
+	);
+
+	wp_enqueue_style(
+		'nexo-dark',
+		NEXO_URI . '/assets/css/dark.css',
+		array( 'nexo-style' ),
 		NEXO_VERSION
 	);
 
@@ -72,7 +85,6 @@ function nexo_enqueue_assets() {
 		wp_add_inline_style( 'nexo-style', $custom_css );
 	}
 
-	// Custom JS from options (footer)
 	$custom_js = nexo_get_option( 'custom_js', '' );
 	if ( $custom_js ) {
 		wp_add_inline_script( 'nexo-main', $custom_js );
@@ -107,7 +119,6 @@ function nexo_generate_dynamic_css() {
 		--nexo-container-width: {$container};
 	}";
 
-	// Responsive helpers for grids
 	$css .= '
 @media (max-width: 1024px) {
 	.nexo-portfolio-grid { grid-template-columns: repeat(2, 1fr) !important; }
@@ -119,7 +130,6 @@ function nexo_generate_dynamic_css() {
 	.nexo-testimonials-grid,
 	.nexo-services-grid,
 	.nexo-pricing-grid { grid-template-columns: 1fr !important; }
-	.nexo-header-cta { display: none; }
 }
 .nexo-testimonial-stars { color: #f59e0b; letter-spacing: 2px; margin-bottom: 12px; font-size: 14px; }
 .nexo-contact-form .nexo-form-msg { margin-top: 12px; font-size: 14px; }
@@ -134,3 +144,17 @@ function nexo_generate_dynamic_css() {
 
 	return $css;
 }
+
+/**
+ * Body classes for dark default + animations
+ */
+function nexo_body_classes( $classes ) {
+	if ( nexo_get_option( 'dark_default', 0 ) ) {
+		$classes[] = 'nexo-dark';
+	}
+	if ( nexo_get_option( 'enable_animations', 1 ) ) {
+		$classes[] = 'nexo-anim';
+	}
+	return $classes;
+}
+add_filter( 'body_class', 'nexo_body_classes' );

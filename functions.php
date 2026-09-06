@@ -3,14 +3,14 @@
  * NEXO OnePage Theme functions and definitions
  *
  * @package NEXO
- * @version 1.6.0
+ * @version 1.7.0
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-define( 'NEXO_VERSION', '1.6.0' );
+define( 'NEXO_VERSION', '1.7.0' );
 define( 'NEXO_DIR', get_template_directory() );
 define( 'NEXO_URI', get_template_directory_uri() );
 define( 'NEXO_INC', NEXO_DIR . '/inc' );
@@ -142,11 +142,7 @@ function nexo_handle_reimport_design() {
 	check_admin_referer( 'nexo_reimport_design' );
 
 	if ( empty( $_GET['confirm'] ) || '1' !== (string) $_GET['confirm'] ) {
-		wp_die(
-			'برای بازنشانی طراحی باید تأیید کنید.',
-			'تأیید لازم است',
-			array( 'response' => 403, 'back_link' => true )
-		);
+		wp_die( 'برای بازنشانی طراحی باید تأیید کنید.', 'تأیید لازم است', array( 'response' => 403, 'back_link' => true ) );
 	}
 
 	$page_id = (int) get_option( 'page_on_front' );
@@ -165,3 +161,60 @@ function nexo_handle_reimport_design() {
 	exit;
 }
 add_action( 'admin_init', 'nexo_handle_reimport_design' );
+
+/**
+ * Apply style preset (designer / developer / photographer)
+ */
+function nexo_handle_style_preset() {
+	if ( ! isset( $_GET['nexo_preset'] ) || ! current_user_can( 'manage_options' ) ) {
+		return;
+	}
+	check_admin_referer( 'nexo_preset' );
+
+	$preset = sanitize_key( wp_unslash( $_GET['nexo_preset'] ) );
+	$map    = array(
+		'designer'     => array(
+			'color_primary'   => '#22c55e',
+			'color_secondary' => '#16a34a',
+			'color_accent'    => '#a855f7',
+			'hero_badge'      => 'سلام، من',
+			'hero_title'      => 'سارا طراحی',
+			'hero_subtitle'   => 'طراح UI/UX و برند',
+			'hero_desc'       => 'تجربه‌های بصری زیبا و کاربردی برای محصولات دیجیتال می‌سازم.',
+		),
+		'developer'    => array(
+			'color_primary'   => '#3b82f6',
+			'color_secondary' => '#2563eb',
+			'color_accent'    => '#06b6d4',
+			'hero_badge'      => 'سلام، من',
+			'hero_title'      => 'علی کد',
+			'hero_subtitle'   => 'توسعه‌دهنده وب و فرانت‌اند',
+			'hero_desc'       => 'سایت‌ها و اپلیکیشن‌های سریع، تمیز و مقیاس‌پذیر می‌سازم.',
+		),
+		'photographer' => array(
+			'color_primary'   => '#f59e0b',
+			'color_secondary' => '#d97706',
+			'color_accent'    => '#ef4444',
+			'hero_badge'      => 'سلام، من',
+			'hero_title'      => 'نیما تصویر',
+			'hero_subtitle'   => 'عکاس و داستان‌گو',
+			'hero_desc'       => 'لحظه‌ها را با نور و ترکیب‌بندی ماندگار ثبت می‌کنم.',
+		),
+	);
+
+	if ( ! isset( $map[ $preset ] ) ) {
+		wp_safe_redirect( admin_url( 'admin.php?page=nexo-settings' ) );
+		exit;
+	}
+
+	$options = get_option( 'nexo_options', array() );
+	if ( ! is_array( $options ) ) {
+		$options = array();
+	}
+	$options = array_merge( $options, $map[ $preset ] );
+	update_option( 'nexo_options', $options );
+
+	wp_safe_redirect( admin_url( 'admin.php?page=nexo-settings&preset_applied=1' ) );
+	exit;
+}
+add_action( 'admin_init', 'nexo_handle_style_preset' );
