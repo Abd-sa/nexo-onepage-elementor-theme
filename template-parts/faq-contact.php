@@ -1,26 +1,26 @@
 <?php
 /**
- * FAQ + Contact Section
+ * FAQ + Contact Section (Persian)
  *
  * @package NEXO
  */
 
 $faqs = array(
 	array(
-		'q' => __( 'How long does a project take?', 'nexo' ),
-		'a' => __( 'Most projects take between 2 to 6 weeks depending on scope and complexity.', 'nexo' ),
+		'q' => 'مدت زمان انجام یک پروژه چقدر است؟',
+		'a' => 'بسته به حجم کار معمولاً بین ۲ تا ۶ هفته طول می‌کشد.',
 	),
 	array(
-		'q' => __( 'Do you provide support after delivery?', 'nexo' ),
-		'a' => __( 'Yes, every package includes a support period. Extended support is also available.', 'nexo' ),
+		'q' => 'بعد از تحویل پشتیبانی دارید؟',
+		'a' => 'بله، هر پکیج دوره پشتیبانی دارد و پشتیبانی تمدیدی هم قابل سفارش است.',
 	),
 	array(
-		'q' => __( 'Can you work with my existing website?', 'nexo' ),
-		'a' => __( 'Absolutely. I can redesign, improve or extend existing websites.', 'nexo' ),
+		'q' => 'روی سایت فعلی‌ام هم کار می‌کنید؟',
+		'a' => 'بله؛ می‌توانم سایت موجود را بازطراحی، بهبود یا توسعه دهم.',
 	),
 	array(
-		'q' => __( 'What do I need to get started?', 'nexo' ),
-		'a' => __( 'Just a brief description of your goals, any existing brand assets, and your preferred timeline.', 'nexo' ),
+		'q' => 'برای شروع چه چیزی لازم است؟',
+		'a' => 'توضیح کوتاه از اهداف، فایل‌های برند (در صورت وجود) و زمان‌بندی مورد نظر شما.',
 	),
 );
 ?>
@@ -28,10 +28,9 @@ $faqs = array(
 <section id="faq" class="nexo-section" style="background:var(--nexo-color-bg-alt,#f8fafc);">
 	<div class="nexo-container">
 		<div class="nexo-faq-contact-grid">
-			<!-- FAQ -->
 			<div>
-				<span style="color:var(--nexo-color-primary);font-weight:600;font-size:14px;"><?php esc_html_e( 'FAQ', 'nexo' ); ?></span>
-				<h2 class="nexo-section-title"><?php esc_html_e( 'Frequently Asked Questions', 'nexo' ); ?></h2>
+				<span style="color:var(--nexo-color-primary);font-weight:600;font-size:14px;">سوالات متداول</span>
+				<h2 class="nexo-section-title">پرسش‌های پرتکرار</h2>
 
 				<div class="nexo-faq-list">
 					<?php foreach ( $faqs as $index => $faq ) : ?>
@@ -48,25 +47,24 @@ $faqs = array(
 				</div>
 			</div>
 
-			<!-- Contact -->
 			<div id="contact">
-				<span style="color:var(--nexo-color-primary);font-weight:600;font-size:14px;"><?php esc_html_e( 'CONTACT', 'nexo' ); ?></span>
-				<h2 class="nexo-section-title"><?php esc_html_e( "Let's Work Together", 'nexo' ); ?></h2>
+				<span style="color:var(--nexo-color-primary);font-weight:600;font-size:14px;">تماس</span>
+				<h2 class="nexo-section-title">بیایید همکاری کنیم</h2>
 
-				<form class="nexo-contact-form" action="#" method="post">
-					<input type="text" name="name" placeholder="<?php esc_attr_e( 'Your Name', 'nexo' ); ?>" required>
-					<input type="email" name="email" placeholder="<?php esc_attr_e( 'Your Email', 'nexo' ); ?>" required>
-					<textarea name="message" placeholder="<?php esc_attr_e( 'Your Message', 'nexo' ); ?>" required></textarea>
+				<form class="nexo-contact-form" method="post" action="#">
+					<input type="text" name="name" placeholder="نام شما" required>
+					<input type="email" name="email" placeholder="ایمیل شما" required>
+					<textarea name="message" placeholder="پیام شما" required></textarea>
 					<button type="submit" class="nexo-btn nexo-btn-primary" style="width:100%;justify-content:center;">
-						<?php esc_html_e( 'Send Message', 'nexo' ); ?> →
+						ارسال پیام
 					</button>
 				</form>
 
 				<div style="margin-top:28px;font-size:14px;color:var(--nexo-color-text-light);">
 					<p>📧 hello@example.com</p>
-					<p>📱 +98 912 345 6789</p>
-					<p>📍 Tehran, Iran</p>
-					<p>🕐 Mon – Fri: 9AM – 6PM</p>
+					<p>📱 ۰۹۱۲ ۳۴۵ ۶۷۸۹</p>
+					<p>📍 تهران، ایران</p>
+					<p>🕐 شنبه تا چهارشنبه ۹ تا ۱۸</p>
 				</div>
 			</div>
 		</div>

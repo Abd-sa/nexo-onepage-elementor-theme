@@ -3,14 +3,14 @@
  * NEXO OnePage Theme functions and definitions
  *
  * @package NEXO
- * @version 1.4.0
+ * @version 1.5.0
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-define( 'NEXO_VERSION', '1.4.0' );
+define( 'NEXO_VERSION', '1.5.0' );
 define( 'NEXO_DIR', get_template_directory() );
 define( 'NEXO_URI', get_template_directory_uri() );
 define( 'NEXO_INC', NEXO_DIR . '/inc' );
@@ -24,7 +24,9 @@ require_once NEXO_INC . '/elementor.php';
 require_once NEXO_INC . '/elementor-default-data.php';
 require_once NEXO_INC . '/elementor-accordion-patch.php';
 require_once NEXO_INC . '/elementor-fa-defaults.php';
+require_once NEXO_INC . '/elementor-widgets.php';
 require_once NEXO_INC . '/demo-import.php';
+require_once NEXO_INC . '/contact-form.php';
 
 function nexo_theme_setup() {
 	load_theme_textdomain( 'nexo', NEXO_DIR . '/languages' );
@@ -52,8 +54,8 @@ function nexo_theme_setup() {
 
 	register_nav_menus(
 		array(
-			'primary' => __( 'منوی اصلی', 'nexo' ),
-			'footer'  => __( 'منوی فوتر', 'nexo' ),
+			'primary' => 'منوی اصلی',
+			'footer'  => 'منوی فوتر',
 		)
 	);
 
@@ -141,8 +143,8 @@ function nexo_handle_reimport_design() {
 
 	if ( empty( $_GET['confirm'] ) || '1' !== (string) $_GET['confirm'] ) {
 		wp_die(
-			esc_html__( 'برای بازنشانی طراحی باید تأیید کنید.', 'nexo' ),
-			esc_html__( 'تأیید لازم است', 'nexo' ),
+			'برای بازنشانی طراحی باید تأیید کنید.',
+			'تأیید لازم است',
 			array( 'response' => 403, 'back_link' => true )
 		);
 	}
