@@ -1,6 +1,6 @@
 <?php
 /**
- * Enqueue scripts and styles
+ * Enqueue scripts and styles (Phase 2 performance tweaks)
  *
  * @package NEXO
  */
@@ -9,19 +9,24 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-/**
- * Front-end assets
- */
 function nexo_enqueue_assets() {
-	// Google Fonts - Vazirmatn (excellent Persian support)
+	// Preconnect for fonts
+	add_action(
+		'wp_head',
+		static function () {
+			echo '<link rel="preconnect" href="https://fonts.googleapis.com">' . "\n";
+			echo '<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>' . "\n";
+		},
+		1
+	);
+
 	wp_enqueue_style(
 		'nexo-fonts',
-		'https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;600;700;800&display=swap',
+		'https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;500;600;700;800&display=swap',
 		array(),
 		null
 	);
 
-	// Main stylesheet
 	wp_enqueue_style(
 		'nexo-style',
 		get_stylesheet_uri(),
@@ -29,7 +34,6 @@ function nexo_enqueue_assets() {
 		NEXO_VERSION
 	);
 
-	// RTL stylesheet
 	if ( is_rtl() ) {
 		wp_enqueue_style(
 			'nexo-rtl',
@@ -39,32 +43,43 @@ function nexo_enqueue_assets() {
 		);
 	}
 
-	// Main JS
 	wp_enqueue_script(
 		'nexo-main',
 		NEXO_URI . '/assets/js/main.js',
 		array(),
 		NEXO_VERSION,
-		true
+		array(
+			'in_footer' => true,
+			'strategy'  => 'defer',
+		)
 	);
 
-	// Localize
-	wp_localize_script( 'nexo-main', 'nexoData', array(
-		'ajaxUrl' => admin_url( 'admin-ajax.php' ),
-		'nonce'   => wp_create_nonce( 'nexo_nonce' ),
-	) );
+	wp_localize_script(
+		'nexo-main',
+		'nexoData',
+		array(
+			'ajaxUrl' => admin_url( 'admin-ajax.php' ),
+			'nonce'   => wp_create_nonce( 'nexo_nonce' ),
+			'i18n'    => array(
+				'sending' => 'در حال ارسال…',
+				'error'   => 'خطایی رخ داد. دوباره تلاش کنید.',
+			),
+		)
+	);
 
-	// Dynamic CSS from options
 	$custom_css = nexo_generate_dynamic_css();
 	if ( $custom_css ) {
 		wp_add_inline_style( 'nexo-style', $custom_css );
 	}
+
+	// Custom JS from options (footer)
+	$custom_js = nexo_get_option( 'custom_js', '' );
+	if ( $custom_js ) {
+		wp_add_inline_script( 'nexo-main', $custom_js );
+	}
 }
 add_action( 'wp_enqueue_scripts', 'nexo_enqueue_assets' );
 
-/**
- * Generate CSS variables from theme options
- */
 function nexo_generate_dynamic_css() {
 	$primary   = nexo_get_option( 'color_primary', '#22c55e' );
 	$secondary = nexo_get_option( 'color_secondary', '#16a34a' );
@@ -91,6 +106,26 @@ function nexo_generate_dynamic_css() {
 		--nexo-font-size-body: {$size_body};
 		--nexo-container-width: {$container};
 	}";
+
+	// Responsive helpers for grids
+	$css .= '
+@media (max-width: 1024px) {
+	.nexo-portfolio-grid { grid-template-columns: repeat(2, 1fr) !important; }
+	.nexo-testimonials-grid { grid-template-columns: repeat(2, 1fr) !important; }
+	.nexo-services-grid { grid-template-columns: repeat(2, 1fr) !important; }
+}
+@media (max-width: 640px) {
+	.nexo-portfolio-grid,
+	.nexo-testimonials-grid,
+	.nexo-services-grid,
+	.nexo-pricing-grid { grid-template-columns: 1fr !important; }
+	.nexo-header-cta { display: none; }
+}
+.nexo-testimonial-stars { color: #f59e0b; letter-spacing: 2px; margin-bottom: 12px; font-size: 14px; }
+.nexo-contact-form .nexo-form-msg { margin-top: 12px; font-size: 14px; }
+.nexo-contact-form .nexo-form-msg.success { color: #16a34a; }
+.nexo-contact-form .nexo-form-msg.error { color: #dc2626; }
+';
 
 	$custom = nexo_get_option( 'custom_css', '' );
 	if ( $custom ) {

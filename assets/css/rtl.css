@@ -1,6 +1,5 @@
 /**
- * NEXO RTL overrides
- * Loaded automatically when is_rtl() is true (e.g. site language = فارسی)
+ * NEXO RTL — Phase 2 (deeper coverage)
  */
 
 body.rtl {
@@ -8,24 +7,31 @@ body.rtl {
 	text-align: right;
 }
 
-.rtl .nexo-hero-grid,
-.rtl .nexo-about-grid,
-.rtl .nexo-faq-contact-grid {
-	direction: rtl;
-}
-
-.rtl .nexo-hero-actions,
-.rtl .nexo-btn {
-	text-align: right;
+.rtl .nexo-header-inner {
+	flex-direction: row-reverse;
 }
 
 .rtl .nexo-nav ul,
 .rtl #primary-menu {
-	flex-direction: row-reverse;
+	flex-direction: row;
+}
+
+.rtl .nexo-hero-grid,
+.rtl .nexo-about-grid,
+.rtl .nexo-faq-contact-grid,
+.rtl .nexo-footer-grid {
+	direction: rtl;
+}
+
+.rtl .nexo-hero-actions {
+	justify-content: flex-start;
 }
 
 .rtl .nexo-section-title,
-.rtl .nexo-section-label {
+.rtl .nexo-section-label,
+.rtl .nexo-portfolio-info,
+.rtl .nexo-testimonial-card,
+.rtl .nexo-price-features {
 	text-align: right;
 }
 
@@ -34,7 +40,25 @@ body.rtl {
 	text-align: center;
 }
 
-/* Elementor alignment helpers when page is RTL */
+.rtl .nexo-faq-question {
+	text-align: right;
+	flex-direction: row-reverse;
+}
+
+.rtl .nexo-testimonial-author {
+	flex-direction: row-reverse;
+	text-align: right;
+}
+
+.rtl .nexo-footer-bottom {
+	flex-direction: row-reverse;
+}
+
+.rtl .nexo-filter-btn {
+	font-family: var(--nexo-font-body);
+}
+
+/* Elementor Free/Pro */
 .rtl .elementor-widget-heading .elementor-heading-title {
 	text-align: right;
 }
@@ -43,10 +67,29 @@ body.rtl {
 	text-align: right;
 }
 
-.rtl .elementor-accordion .elementor-tab-title {
+.rtl .elementor-accordion .elementor-tab-title,
+.rtl .elementor-toggle .elementor-tab-title {
 	text-align: right;
 }
 
 .rtl .elementor-icon-box-wrapper {
+	text-align: right;
+}
+
+.rtl .elementor-button-wrapper {
+	text-align: right;
+}
+
+.rtl .elementor-widget-icon-list .elementor-icon-list-items {
+	text-align: right;
+}
+
+.rtl .elementor-nav-menu--main .elementor-nav-menu {
+	justify-content: flex-start;
+}
+
+/* Forms */
+.rtl .nexo-contact-form input,
+.rtl .nexo-contact-form textarea {
 	text-align: right;
 }
