@@ -1,0 +1,141 @@
+/**
+ * Phase 4 extras: mobile menu, animations, sticky scrolled header
+ */
+
+/* Mobile toggle */
+.nexo-menu-toggle {
+	display: none;
+	background: none;
+	border: 1px solid #e2e8f0;
+	border-radius: 8px;
+	width: 44px;
+	height: 44px;
+	align-items: center;
+	justify-content: center;
+	flex-direction: column;
+	gap: 5px;
+	cursor: pointer;
+	padding: 0;
+}
+
+.nexo-menu-toggle span {
+	display: block;
+	width: 18px;
+	height: 2px;
+	background: var(--nexo-color-text, #1a1a2e);
+	border-radius: 2px;
+	transition: transform 0.2s ease, opacity 0.2s ease;
+}
+
+body.nexo-dark .nexo-menu-toggle {
+	border-color: #334155;
+}
+
+body.nexo-dark .nexo-menu-toggle span {
+	background: #e2e8f0;
+}
+
+.nexo-menu-toggle[aria-expanded="true"] span:nth-child(1) {
+	transform: translateY(7px) rotate(45deg);
+}
+
+.nexo-menu-toggle[aria-expanded="true"] span:nth-child(2) {
+	opacity: 0;
+}
+
+.nexo-menu-toggle[aria-expanded="true"] span:nth-child(3) {
+	transform: translateY(-7px) rotate(-45deg);
+}
+
+.nexo-theme-toggle {
+	background: none;
+	border: 1px solid #e2e8f0;
+	border-radius: 8px;
+	width: 44px;
+	height: 44px;
+	cursor: pointer;
+	font-size: 18px;
+	line-height: 1;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	margin-inline-start: 8px;
+}
+
+body.nexo-dark .nexo-theme-toggle {
+	border-color: #334155;
+	color: #e2e8f0;
+}
+
+.nexo-header-actions {
+	display: flex;
+	align-items: center;
+	gap: 8px;
+}
+
+.nexo-header.is-scrolled {
+	box-shadow: 0 8px 24px rgba(15, 23, 42, 0.08);
+}
+
+/* Mobile panel */
+.nexo-mobile-panel {
+	display: none;
+	position: fixed;
+	inset: 72px 0 0 0;
+	background: #fff;
+	z-index: 999;
+	padding: 24px 20px;
+	overflow-y: auto;
+}
+
+.nexo-mobile-panel.is-open {
+	display: block;
+}
+
+.nexo-mobile-panel ul {
+	list-style: none;
+	margin: 0;
+	padding: 0;
+	display: flex;
+	flex-direction: column;
+	gap: 8px;
+}
+
+.nexo-mobile-panel a {
+	display: block;
+	padding: 12px 8px;
+	font-weight: 600;
+	color: var(--nexo-color-text);
+	border-bottom: 1px solid #f1f5f9;
+}
+
+@media (max-width: 768px) {
+	.nexo-menu-toggle {
+		display: inline-flex;
+	}
+
+	.nexo-nav,
+	.nexo-header-cta {
+		display: none !important;
+	}
+}
+
+/* Scroll reveal animations */
+body.nexo-anim .nexo-reveal {
+	opacity: 0;
+	transform: translateY(24px);
+	transition: opacity 0.6s ease, transform 0.6s ease;
+}
+
+body.nexo-anim .nexo-reveal.is-visible {
+	opacity: 1;
+	transform: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+	body.nexo-anim .nexo-reveal {
+		opacity: 1;
+		transform: none;
+		transition: none;
+	}
+}

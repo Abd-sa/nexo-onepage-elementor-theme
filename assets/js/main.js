@@ -1,5 +1,5 @@
 /**
- * NEXO front-end scripts
+ * NEXO front-end scripts (Phase 4)
  */
 (function () {
   'use strict';
@@ -88,7 +88,7 @@
     });
   });
 
-  // Smooth scroll for hash links
+  // Smooth scroll
   document.querySelectorAll('a[href^="#"]').forEach(function (a) {
     a.addEventListener('click', function (e) {
       var id = a.getAttribute('href');
@@ -97,7 +97,101 @@
       if (target) {
         e.preventDefault();
         target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        // close mobile menu
+        var panel = document.getElementById('nexo-mobile-panel');
+        var toggle = document.getElementById('nexo-menu-toggle');
+        if (panel) {
+          panel.classList.remove('is-open');
+          panel.hidden = true;
+        }
+        if (toggle) toggle.setAttribute('aria-expanded', 'false');
+        document.body.style.overflow = '';
       }
     });
   });
+
+  // Mobile menu
+  var menuToggle = document.getElementById('nexo-menu-toggle');
+  var mobilePanel = document.getElementById('nexo-mobile-panel');
+  if (menuToggle && mobilePanel) {
+    menuToggle.addEventListener('click', function () {
+      var open = menuToggle.getAttribute('aria-expanded') === 'true';
+      menuToggle.setAttribute('aria-expanded', open ? 'false' : 'true');
+      if (open) {
+        mobilePanel.classList.remove('is-open');
+        mobilePanel.hidden = true;
+        document.body.style.overflow = '';
+      } else {
+        mobilePanel.hidden = false;
+        mobilePanel.classList.add('is-open');
+        document.body.style.overflow = 'hidden';
+      }
+    });
+  }
+
+  // Dark mode toggle (persisted)
+  var themeToggle = document.getElementById('nexo-theme-toggle');
+  function applyDark(on) {
+    document.body.classList.toggle('nexo-dark', !!on);
+    if (themeToggle) themeToggle.textContent = on ? '☀️' : '🌙';
+    try {
+      localStorage.setItem('nexo_dark', on ? '1' : '0');
+    } catch (e) {}
+  }
+  if (themeToggle) {
+    var saved = null;
+    try {
+      saved = localStorage.getItem('nexo_dark');
+    } catch (e) {}
+    if (saved === '1') applyDark(true);
+    else if (saved === '0') applyDark(false);
+    else if (document.body.classList.contains('nexo-dark')) applyDark(true);
+
+    themeToggle.addEventListener('click', function () {
+      applyDark(!document.body.classList.contains('nexo-dark'));
+    });
+  }
+
+  // Sticky header shadow
+  var header = document.getElementById('masthead');
+  if (header) {
+    window.addEventListener(
+      'scroll',
+      function () {
+        if (window.scrollY > 12) header.classList.add('is-scrolled');
+        else header.classList.remove('is-scrolled');
+      },
+      { passive: true }
+    );
+  }
+
+  // Scroll reveal
+  if (document.body.classList.contains('nexo-anim')) {
+    var targets = document.querySelectorAll(
+      '.nexo-section, .nexo-service-card, .nexo-portfolio-item, .nexo-testimonial-card, .nexo-price-card'
+    );
+    targets.forEach(function (el) {
+      el.classList.add('nexo-reveal');
+    });
+    if ('IntersectionObserver' in window) {
+      var io = new IntersectionObserver(
+        function (entries) {
+          entries.forEach(function (entry) {
+            if (entry.isIntersecting) {
+              entry.target.classList.add('is-visible');
+              io.unobserve(entry.target);
+            }
+          });
+        },
+        { threshold: 0.12 }
+      );
+      targets.forEach(function (el) {
+        io.observe(el);
+      });
+    } else {
+      targets.forEach(function (el) {
+        el.classList.add('is-visible');
+      });
+    }
+  }
 })();

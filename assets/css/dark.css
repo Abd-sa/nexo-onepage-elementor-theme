@@ -1,0 +1,61 @@
+/**
+ * NEXO Dark Mode
+ * Activated via body.nexo-dark
+ */
+
+body.nexo-dark {
+	--nexo-color-text: #e2e8f0;
+	--nexo-color-text-light: #94a3b8;
+	--nexo-color-bg: #0b1220;
+	--nexo-color-bg-alt: #111827;
+	--nexo-color-dark: #020617;
+	color: var(--nexo-color-text);
+	background-color: var(--nexo-color-bg);
+}
+
+body.nexo-dark .nexo-header {
+	background: rgba(11, 18, 32, 0.92);
+	border-bottom-color: #1e293b;
+}
+
+body.nexo-dark .nexo-logo,
+body.nexo-dark .nexo-nav a {
+	color: #e2e8f0;
+}
+
+body.nexo-dark .nexo-hero {
+	background: linear-gradient(180deg, #111827 0%, #0b1220 100%);
+}
+
+body.nexo-dark .nexo-stat-box,
+body.nexo-dark .nexo-portfolio-item,
+body.nexo-dark .nexo-testimonial-card,
+body.nexo-dark .nexo-price-card {
+	background: #111827;
+	border-color: #1e293b;
+}
+
+body.nexo-dark .nexo-filter-btn {
+	background: #111827;
+	border-color: #334155;
+	color: #e2e8f0;
+}
+
+body.nexo-dark .nexo-contact-form input,
+body.nexo-dark .nexo-contact-form textarea {
+	background: #111827;
+	border-color: #334155;
+	color: #e2e8f0;
+}
+
+body.nexo-dark .nexo-faq-item {
+	border-bottom-color: #1e293b;
+}
+
+body.nexo-dark .nexo-faq-question {
+	color: #e2e8f0;
+}
+
+body.nexo-dark .nexo-mobile-panel {
+	background: #0b1220;
+}
