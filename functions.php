@@ -3,14 +3,14 @@
  * NEXO OnePage Theme functions and definitions
  *
  * @package NEXO
- * @version 1.5.0
+ * @version 1.6.0
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-define( 'NEXO_VERSION', '1.5.0' );
+define( 'NEXO_VERSION', '1.6.0' );
 define( 'NEXO_DIR', get_template_directory() );
 define( 'NEXO_URI', get_template_directory_uri() );
 define( 'NEXO_INC', NEXO_DIR . '/inc' );
