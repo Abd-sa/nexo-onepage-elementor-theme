@@ -1,6 +1,6 @@
 <?php
 /**
- * Built-in contact form (AJAX) - no third-party required
+ * Built-in contact form (AJAX).
  *
  * @package NEXO
  */
@@ -10,7 +10,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 /**
- * Handle AJAX contact submission
+ * Handle AJAX contact submission.
  */
 function nexo_handle_contact_ajax() {
 	check_ajax_referer( 'nexo_nonce', 'nonce' );
@@ -31,37 +31,24 @@ function nexo_handle_contact_ajax() {
 	}
 
 	if ( empty( $name ) || empty( $email ) || ! is_email( $email ) || empty( $message ) ) {
-		wp_send_json_error(
-			array(
-				'message' => 'Please fill all fields correctly.',
-			)
-		);
+		wp_send_json_error( array( 'message' => 'Please fill all fields correctly.' ) );
 	}
 
-	$to = get_option( 'admin_email' );
+	$to      = get_option( 'admin_email' );
 	$subject = sprintf( '[NEXO] New message from %s', $name );
-	body    = "Name: {$name}\nEmail: {$email}\n\nMessage:\n{$message}\n";
+	body    = 'Name: ' . $name . "\n" . 'Email: ' . $email . "\n\n" . 'Message:' . "\n" . $message . "\n";
 
-	$headers = array(
-		'Content-Type: text/plain; charset=UTF-8',
-		'Reply-To: ' . $name . ' <' . $email . '>',
-	);
+	$headers   = array();
+	$headers[] = 'Content-Type: text/plain; charset=UTF-8';
+	$headers[] = 'Reply-To: ' . $name . ' <' . $email . '>';
 
 	$sent = wp_mail( $to, $subject, $body, $headers );
 
 	if ( $sent ) {
-		wp_send_json_success(
-			array(
-				'message' => 'Your message was sent successfully.',
-			)
-		);
+		wp_send_json_success( array( 'message' => 'Your message was sent successfully.' ) );
 	}
 
-	wp_send_json_error(
-		array(
-			'message' => 'Could not send email. Please try again later.',
-		)
-	);
+	wp_send_json_error( array( 'message' => 'Could not send email. Please try again later.' ) );
 }
 add_action( 'wp_ajax_nexo_contact', 'nexo_handle_contact_ajax' );
 add_action( 'wp_ajax_nopriv_nexo_contact', 'nexo_handle_contact_ajax' );
